@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaUTM - Login/Sign Up</title>
-    <link href="/css/style.css" rel="stylesheet">
+    <title>AquaUTM - Sign Up</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -22,24 +22,33 @@
 
     <main>
         <div class="signup-container">
-            <h2>Login</h2>
-            <p>Welcome back!!</p>
+            <h2>Sign Up Now!</h2>
+            <p>You are one step away from joining us.</p>
 
-            <form action="/login" method="post">
+            <form action="/signup" method="post">
+                <div class="input-group">
+                    <div style="flex:1;">
+                        <label>First Name <span class="required">*</span></label>
+                        <input type="text" name="firstName" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label>Last Name <span class="required">*</span></label>
+                        <input type="text" name="lastName" required>
+                    </div>
+                </div>
+
                 <label>Email <span class="required">*</span></label>
                 <input type="email" name="email" required>
 
                 <label>Password <span class="required">*</span></label>
                 <input type="password" name="password" required>
 
-                <button type="submit">Log In</button>
+                <button type="submit">Sign Up</button>
             </form>
 
             <div class="login-link">
-                <br>Don't have an account? <a href="signup.html">Sign Up</a>
+                <br>Already have an account? <a href="login.html">Log In</a>
             </div>
-
-            
         </div>
     </main>
 
