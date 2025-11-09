@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaUTM - Sign Up</title>
-    <link href="style.css" rel="stylesheet">
+    <title>AquaUTM - Login/Sign Up</title>
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
     <nav class="navbar">
         <div class="navdiv">
-            <img src="/images/logo.png" alt="Logo" width="40" height="40" class="me-3">
+            <img src="images/logo.png" alt="Logo" width="40" height="40" class="me-3">
             <ul class="nav-list">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="events.html">Events</a></li>
@@ -25,23 +25,28 @@
             <h2>Sign Up Now!</h2>
             <p>You are one step away from joining us.</p>
 
-            <form action="/signup" method="post">
+            <form action="#" method="post">
                 <div class="input-group">
                     <div style="flex:1;">
                         <label>First Name <span class="required">*</span></label>
-                        <input type="text" name="firstName" required>
+                        <input type="text" required>
                     </div>
                     <div style="flex:1;">
                         <label>Last Name <span class="required">*</span></label>
-                        <input type="text" name="lastName" required>
+                        <input type="text" required>
                     </div>
                 </div>
 
+                <label>Username <span class="required">*</span></label>
+                <input type="username" required>
+                <!-- <label>Username <span class="required">*</span></label> 
+                <input type="text" name="username" required> -->
+
                 <label>Email <span class="required">*</span></label>
-                <input type="email" name="email" required>
+                <input type="email" required>
 
                 <label>Password <span class="required">*</span></label>
-                <input type="password" name="password" required>
+                <input type="password" required>
 
                 <button type="submit">Sign Up</button>
             </form>
@@ -67,7 +72,7 @@
 
         <div class="footer-bottom">
             <div class="footer-logo">
-                <img src="/images/logo.png" alt="AquaUTM Logo">
+                <img src="images/logo.png" alt="AquaUTM Logo">
                 <span>AquaUTM</span>
             </div>
 
