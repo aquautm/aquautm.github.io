@@ -62,8 +62,8 @@ main {
 }
 
 .members-section {
-    padding: 60px 10% ;
-    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8),rgba(230, 230, 250, 0.8));
+    padding: 60px 10%;
+    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8), rgba(230, 230, 250, 0.8));
     border-radius: 20px;
     max-width: 800px;
     margin: 50px auto;
@@ -71,14 +71,14 @@ main {
 }
 
 .members-section h2 {
-    display: inline-block;     
-    background: #ffffff;        
-    padding: 10px 20px;      
-    color: #0077b6;            
+    display: inline-block;
+    background: #ffffff;
+    padding: 10px 20px;
+    color: #0077b6;
     font-size: 2em;
     margin-bottom: 40px;
-    border-radius: 8px;          
-    text-align: center; 
+    border-radius: 8px;
+    text-align: center;
 }
 
 .members-grid {
@@ -89,13 +89,13 @@ main {
 }
 
 .member-card {
-    display: flex; 
+    display: flex;
     align-items: flex-start;
     gap: 20px;
     background: #f9f9f9;
     border-radius: 12px;
     padding: 15px 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     width: 100%;
 }
@@ -111,8 +111,8 @@ main {
 }
 
 .member-info {
-    flex: 1;           
-    text-align: left; 
+    flex: 1;
+    text-align: left;
 }
 
 .member-info h3 {
@@ -129,8 +129,8 @@ main {
 }
 
 .achievements-section {
-    padding: 60px 10% ;
-    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8),rgba(230, 230, 250, 0.8));
+    padding: 60px 10%;
+    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8), rgba(230, 230, 250, 0.8));
     border-radius: 20px;
     max-width: 800px;
     margin: 50px auto;
@@ -160,7 +160,7 @@ main {
     background: #f9f9f9;
     border-radius: 12px;
     padding: 15px 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .achievement-card:hover {
@@ -422,6 +422,39 @@ button:hover {
 .login-link a:hover {
     background-color: #0d2533;
 }
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 15px;
+    color: #333;
+    appearance: none;
+    /* removes default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23666' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:hover {
+    border-color: #1E3748;
+}
+
+select:focus {
+    outline: none;
+    border-color: #1E3748;
+    box-shadow: 0 0 0 3px rgba(30, 55, 72, 0.15);
+}
+
 
 .footer {
     background-color: rgba(255, 255, 255, 0.9);
