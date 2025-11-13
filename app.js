@@ -83,7 +83,7 @@ app.post("/login", async (req, res) => {
     );
 
     console.log(`✅ Login successful for: ${email} (IP: ${ipAddress})`);
-    res.sendFile(path.join(__dirname, "public", "welcome.html"));
+    res.sendFile(path.join(__dirname, "", "welcome.html"));
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).send("Login failed.");
