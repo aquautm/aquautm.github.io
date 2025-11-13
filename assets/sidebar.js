@@ -7,9 +7,8 @@ sidebarToggle.addEventListener("click", () => {
 
 document.querySelectorAll(".menu-link").forEach(link => {
     link.addEventListener("click", e => {
-        // Allow form submission for logout button
         if (link.tagName === 'BUTTON' && link.form && link.form.action.includes('/logout')) {
-            return; // Let the form submit
+            return;
         }
 
         e.preventDefault();
@@ -21,6 +20,12 @@ document.querySelectorAll(".menu-link").forEach(link => {
 
         const sectionId = link.querySelector(".menu-label").textContent.trim().toLowerCase();
         const target = document.getElementById(sectionId);
-        if (target) target.classList.add("active");
+        if (target) {
+            target.classList.add("active");
+
+            if (sectionId === "schedule" && window.calendar) {
+                setTimeout(() => window.calendar.updateSize(), 100);
+            }
+        }
     });
 });

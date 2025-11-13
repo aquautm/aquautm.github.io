@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AquaUTM - Dashboard</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.css" rel="stylesheet">
     <link href="/assets/style.css" rel="stylesheet">
 </head>
 
@@ -49,7 +51,8 @@
                 </li>
                 <li class="menu-item">
                     <form action="/logout" method="POST" style="display: inline;">
-                        <button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
+                        <button type="submit" class="menu-link"
+                            style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
                             <span class="menu-icon material-symbols-rounded">logout</span>
                             <span class="menu-label">Logout</span>
                         </button>
@@ -74,7 +77,7 @@
                 </div>
             </div>
         </section>
-    
+
         <section class="section" id="announcements">
             <h1>Announcements</h1>
             <div class="card">
@@ -82,15 +85,16 @@
                 <p>Placeholder</p>
             </div>
         </section>
-    
+
         <section class="section" id="schedule">
             <h1>Training Schedule</h1>
+            <div id="calendar"></div>
             <div class="card schedule-card">
-                <h3>Calendar</h3>
+                <h3>Manage Schedule</h3>
                 <p>Placeholder</p>
             </div>
         </section>
-    
+
         <section class="section" id="profile">
             <h1>Profile</h1>
             <div class="card">
@@ -98,8 +102,10 @@
                 <p><strong>Role:</strong> Member</p>
             </div>
         </section>
-    </main>    
+    </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+    <script src="/assets/calendar.js"></script>
     <script src="/assets/sidebar.js"></script>
 </body>
 
