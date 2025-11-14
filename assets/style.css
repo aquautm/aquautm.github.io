@@ -16,6 +16,12 @@ body {
     background-size: cover;
 }
 
+.body-b {
+    margin-top: 70px;
+    background: url("../images/backg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
 .homepage {
     margin-top: 0;
 }
@@ -62,79 +68,76 @@ main {
 }
 
 .members-section {
-    padding: 60px 10%;
-    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8), rgba(230, 230, 250, 0.8));
-    border-radius: 20px;
-    max-width: 800px;
-    margin: 50px auto;
+    background-color:#f7faff;
+    padding: 40px 5%;
+    border-radius: 15px;
+    max-width: 900px;
+    margin: 50px auto 100px;
     text-align: center;
+    font-family: 'Arial', sans-serif;
 }
 
 .members-section h2 {
-    display: inline-block;
-    background: #ffffff;
-    padding: 10px 20px;
-    color: #0077b6;
-    font-size: 2em;
+    font-size: 2.5em;
+    color: #1e3d58;
     margin-bottom: 40px;
-    border-radius: 8px;
-    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .members-grid {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 30px;
-    align-items: center;
+    justify-content: center;
 }
 
 .member-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    background: #f9f9f9;
+    background: #ffffff;
     border-radius: 12px;
-    padding: 15px 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    width: 100%;
+    padding: 20px;
+    width: 280px;
+    text-align: center;
+    transition: transform 0.3s;
 }
 
 .member-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
 }
 
 .member-card img {
-    height: 170px;
-    width: 120px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
     margin-bottom: 15px;
 }
 
-.member-info {
-    flex: 1;
-    text-align: left;
-}
-
-.member-info h3 {
-    margin: 0;
-    color: #0077b6;
+.name-bar {
+    background-color: #4f92d1;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
 }
 
 .member-info p {
-    text-align: left;
-    margin-top: 8px;
     color: #555;
-    font-size: 0.9em;
+    font-size: 1em;
     line-height: 1.5;
+    margin-top: 10px;
+    text-align:justify;
 }
 
-.achievements-section {
-    padding: 60px 10%;
-    background: linear-gradient(135deg, rgba(176, 224, 230, 0.8), rgba(230, 230, 250, 0.8));
-    border-radius: 20px;
-    max-width: 800px;
-    margin: 50px auto;
-    text-align: center;
+.divider {
+    width: 2px;
+    height: 100%;
+    background: #cccccc;
+    margin: 0 20px;
 }
 
 .achievements-section h2 {
