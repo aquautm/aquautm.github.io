@@ -38,7 +38,7 @@ router.post("/signup", async (req, res) => {
 
     // Insert into SQL
     await db.promise().query(
-      "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
+      "INSERT INTO users (first_name, last_name, email, password,twofa_enabled) VALUES (?, ?, ?, ?,true)",
       [firstName, lastName, email, hashedPassword]
     );
 
