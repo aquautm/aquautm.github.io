@@ -8,10 +8,10 @@ USE aquautm;
 -- IMPORTANT: Replace 'youremail@example.com'with your email.
 -- IMPORTANt: IF it said "Incorect password" got to forgot password option to change the password.
 INSERT INTO users (first_name, last_name, email, password, role, twofa_enabled) VALUES
-('Admin', 'User', 'youremail@example.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', FALSE);
+('Admin', 'User', 'muhammadfirdaus.ms@graduate.utm.my', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', FALSE);
 
 -- Insert athlete user (password: athlete123)
 -- Note: The password hash below is for 'athlete123' using bcrypt with salt rounds 10.
 -- IMPORTANt: IF it said "Incorect password" got to forgot password option to change the password. 
 INSERT INTO users (first_name, last_name, email, password, role, twofa_enabled) VALUES
-('Athlete', 'User', 'youremail@example.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'athlete', FALSE);
+('Athlete', 'User', 'ciku137@gmail.com', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'athlete', FALSE);

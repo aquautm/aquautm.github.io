@@ -38,8 +38,8 @@ router.post("/signup", async (req, res) => {
 
     // Insert into SQL
     await db.promise().query(
-      "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
-      [firstName, lastName, email, hashedPassword]
+      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, ?, true)",
+      [firstName, lastName, `${firstName.toLowerCase()}.${lastName.toLowerCase()}`, email, hashedPassword]
     );
 
     console.log("✅ New user registered:", email);
@@ -68,30 +68,45 @@ router.post("/login", async (req, res) => {
       return res.send("Incorrect password.");
     }
 
-    // Always require 2FA for all users
-    // Generate 6-digit code
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    if (user.twofa_enabled) {
+      // Generate 6-digit code
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Store code
+      // Store code
+      await db.promise().query(
+        "INSERT INTO verification_codes (user_id, email, code, expires_at) VALUES (?, ?, ?, ?)",
+        [user.id, email, code, expiresAt]
+      );
+
+      // Send email
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Your 2FA Code',
+        text: `Your verification code is: ${code}. It expires in 10 minutes.`
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      // Redirect to 2FA page with email in session (simplified)
+      res.redirect(`/verify-2fa?email=${encodeURIComponent(email)}`);
+      return;
+    }
+
+    // ✅ Log the login event
     await db.promise().query(
-      "INSERT INTO verification_codes (user_id, email, code, expires_at) VALUES (?, ?, ?, ?)",
-      [user.id, email, code, expiresAt]
+      "INSERT INTO login_logs (user_id, email, ip_address, user_agent) VALUES (?, ?, ?, ?)",
+      [user.id, email, ipAddress, userAgent]
     );
 
-    // Send email
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Your 2FA Code',
-      text: `Your verification code is: ${code}. It expires in 10 minutes.`
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    // Redirect to 2FA page with email in session (simplified)
-    res.redirect(`/verify-2fa?email=${encodeURIComponent(email)}`);
-    return;
+    console.log(`✅ Login successful for: ${email} (IP: ${ipAddress})`);
+    // Set session
+    req.session.userId = user.id;
+    req.session.userRole = user.role;
+    // Redirect based on user role
+    const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
+    res.redirect(dashboardPath);
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).send("Login failed.");
