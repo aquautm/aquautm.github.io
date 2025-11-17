@@ -16,8 +16,183 @@ body {
     background-size: cover;
 }
 
+.body-b {
+    margin-top: 70px;
+    background: url("../images/backg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.homepage {
+    margin-top: 0;
+}
+
+.homepage main {
+    margin-top: 0;
+}
+
 main {
     flex: 1;
+}
+
+.about-section {
+    background-color: #f7faff;
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.about-section h2 {
+    font-size: 2em;
+    color: #0077b6;
+    margin-bottom: 30px;
+}
+
+.about-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.about-image {
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    max-width: 600px;
+    text-align: left;
+    color: #333;
+    line-height: 1.6;
+}
+
+.members-section {
+    background-color:#f7faff;
+    padding: 40px 5%;
+    border-radius: 15px;
+    max-width: 900px;
+    margin: 50px auto 100px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.members-section h2 {
+    font-size: 2.5em;
+    color: #1e3d58;
+    margin-bottom: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.members-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.member-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 280px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.member-card:hover {
+    transform: translateY(-10px);
+}
+
+.member-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.name-bar {
+    background-color: #4f92d1;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.member-info p {
+    color: #555;
+    font-size: 1em;
+    line-height: 1.5;
+    margin-top: 10px;
+    text-align:justify;
+}
+
+.divider {
+    width: 2px;
+    height: 100%;
+    background: #cccccc;
+    margin: 0 20px;
+}
+
+.achievements-section h2 {
+    display: inline-block;
+    background: #ffffff;
+    padding: 10px 20px;
+    color: #0077b6;
+    font-size: 2em;
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+
+.achievements-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.achievement-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-card:hover {
+    transform: translateY(-5px);
+}
+
+.achievement-card img {
+    width: 250px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.achievement-info {
+    flex: 1;
+    text-align: center;
+}
+
+.achievement-info h3 {
+    margin: 0;
+    color: #1E3748;
+}
+
+.achievement-info p {
+    margin-top: 8px;
+    color: #555;
+    font-size: 0.9em;
+    line-height: 1.5;
 }
 
 .navbar {
@@ -68,6 +243,42 @@ main {
     color: #e0e0e0;
 }
 
+.home-sections {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 50px 5%;
+    background-color: #f8f9fa;
+}
+
+.home-card {
+    flex: 1 1 300px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.home-card h2 {
+    margin-bottom: 15px;
+    color: #0077b6;
+}
+
+.home-card p {
+    color: #333;
+    line-height: 1.6;
+}
+
 .signup-container {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 40px;
@@ -75,6 +286,36 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 400px;
     margin: 60px auto 80px;
+}
+
+.slider-container {
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    background-color: #eee;
+}
+
+.mySwiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 h2 {
@@ -124,7 +365,7 @@ input {
 
 .password-container input {
     width: 100%;
-    padding-right: 40px; /* Space for the eye icon */
+    padding-right: 40px;
 }
 
 .eye-icon {
@@ -179,6 +420,38 @@ button:hover {
 .login-link a:hover {
     background-color: #0d2533;
 }
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 15px;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23666' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:hover {
+    border-color: #1E3748;
+}
+
+select:focus {
+    outline: none;
+    border-color: #1E3748;
+    box-shadow: 0 0 0 3px rgba(30, 55, 72, 0.15);
+}
+
 
 .footer {
     background-color: rgba(255, 255, 255, 0.9);
@@ -251,6 +524,8 @@ button:hover {
 }
 
 .body-dashboard {
+    display: flex;
+    align-items: flex-start;
     background: #c7d7e1;
     min-height: 100vh;
 }
@@ -328,7 +603,7 @@ button:hover {
     transform: translateY(40px);
 }
 
-.sidebar-menu .menu-link{
+.sidebar-menu .menu-link {
     color: #fff;
     display: flex;
     gap: 12px;
@@ -354,7 +629,7 @@ button:hover {
     transition: opacity 0.4s ease;
 }
 
-.sidebar.collapsed .sidebar-menu .menu-link .menu-label{
+.sidebar.collapsed .sidebar-menu .menu-link .menu-label {
     opacity: 0;
     pointer-events: none;
 }
@@ -377,19 +652,20 @@ button:hover {
 }
 
 .main-content {
-    margin-left: 285px;
-    margin-top: 16px;
-    margin-bottom: 30px;
+    flex: 1;
+    margin: 16px 16px 16px 285px;
     padding: 24px;
-    transition: margin-left 0.4s ease;
-    min-height: 100vh;
     background-color: #f5f8fa;
-    color: #1E3748;
     border-radius: 16px;
+    color: #1E3748;
+    transition: margin-left 0.4s ease;
+    width: calc(100% - 301px);
+    box-sizing: border-box;
 }
 
 .sidebar.collapsed ~ .main-content {
     margin-left: 120px;
+    width: calc(100% - 136px);
 }
 
 .section {
@@ -435,7 +711,8 @@ button:hover {
     margin-bottom: 10px;
 }
 
-.card p, .card li {
+.card p,
+.card li {
     color: #444;
 }
 
@@ -445,9 +722,80 @@ button:hover {
     gap: 20px;
 }
 
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+#calendar {
+    max-width: 900px;
+    height: 600px;
+    margin: 30px auto;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    margin: 10% auto;
+    width: 300px;
+    border-radius: 10px;
+}
+
+.fc-toolbar-title {
+    font-size: 1rem;
+    color: #1E3748;
+}
+
+.fc-daygrid-day-number {
+    font-weight: 500;
+    color: #333;
+}
+
+.fc-button {
+    background-color: #ffffff !important;
+    color: #1E3748 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    width: auto !important;
+    font-size: 13px !important;
+    padding: 5px 10px !important;
+}
+
+.fc-button:hover {
+    background-color: #ccc !important;
+}
+
+.fc-day-today {
+    background-color: rgba(30, 55, 72, 0.1) !important;
+    border-radius: 4px;
+}
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 480px) {
