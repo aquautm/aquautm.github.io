@@ -20,7 +20,10 @@ app.use(express.static(path.join(__dirname, "")));
 // Routes
 const pagesRouter = require("./routes/pages");
 const authRouter = require("./routes/auth");
+const profileRoutes = require("./routes/profile");
 
+
+app.use("/", profileRoutes);
 app.use("/", pagesRouter);
 app.use("/", authRouter);
 

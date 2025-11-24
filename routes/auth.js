@@ -38,8 +38,8 @@ router.post("/signup", async (req, res) => {
 
     // Insert into SQL
     await db.promise().query(
-      "INSERT INTO users (first_name, last_name, email, password,twofa_enabled) VALUES (?, ?, ?, ?,true)",
-      [firstName, lastName, email, hashedPassword]
+      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, ?, true)",
+      [firstName, lastName, `${firstName.toLowerCase()}.${lastName.toLowerCase()}`, email, hashedPassword]
     );
 
     console.log("✅ New user registered:", email);
@@ -237,6 +237,7 @@ router.post("/enable-2fa", async (req, res) => {
     res.status(500).send("Error enabling 2FA.");
   }
 });
+
 
 // Logout route
 router.post("/logout", (req, res) => {

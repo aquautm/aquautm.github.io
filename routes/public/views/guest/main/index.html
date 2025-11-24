@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AquaUTM - Home</title>
+  <link href="assets/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="body-a homepage">
+  <nav class="navbar">
+    <div class="navdiv">
+      <img src="/images/logo.png" alt="Logo" width="40" height="40" class="me-3">
+      <ul class="nav-list">
+        <li class="header-li"><a href="/">Home</a></li>
+        <li class="header-li"><a href="/events">Events</a></li>
+        <li class="header-li"><a href="/login">Log In / Sign Up</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="slider-container">
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="images/swm1.png" alt="Slide 1">
+          </div>
+
+          <div class="swiper-slide">
+            <img src="images/swm2.png" alt="Slide 2">
+          </div>
+
+          <div class="swiper-slide">
+            <img src="images/swm3.png" alt="Slide 3">
+          </div>
+        </div>
+
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+  </main>
+
+  <section class="home-sections">
+    <div class="home-card" onclick="location.href='public/views/guest/main/achvm.html'">
+      <h2>Achievements</h2>
+      <p>See our club's proudest moments and records set by our swimmers.</p>
+    </div>
+
+    <div class="home-card" onclick="location.href='public/views/guest/main/coach.html'">
+      <h2>Coaches</h2>
+      <p>Meet our professional trainers and mentors behind every success.</p>
+    </div>
+
+    <div class="home-card" onclick="location.href='public/views/guest/main/club.html'">
+      <h2>Club Details</h2>
+      <p>Learn more about AquaUTM, our vision, and how to join us.</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+<section class="about-section">
+  <h2>About AquaUTM</h2>
+  <div class="about-container">
+    <img src="images/clubintro.jpg" alt="AquaUTM Pool View" class="about-image">
+    <div class="about-text">
+      <p>
+        The UTM Swimming Pool was completed in 2011 and officially began operating in 2012. 
+        It features two pools with different depths — 1.35 meters and 5 meters — catering to both beginners and professional swimmers. 
+        The facility also includes a grandstand area that can accommodate up to 1,000 spectators, making it an ideal venue for various aquatic events and activities.
+      </p>
+      <p>
+        A wide range of programs can be held at the UTM Swimming Pool, including scuba diving license training, dinner events, seminars, swimming competitions, 
+        aqua Zumba sessions, and more. With its excellent facilities and vibrant atmosphere, the UTM Swimming Pool continues to serve as a hub for water sports 
+        and community engagement at Universiti Teknologi Malaysia
+      </p>
+    </div>
+  </div>
+</section>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <h3>Get In Touch</h3>
+        <p>Kolam Renang UTM<br>80990 Johor Bahru, Johor</p>
+        <p>Phone: +60123456789<br>Email: aquautm@gmail.com</p>
+      </div>
+      <div class="footer-map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31906.720104878943!2d103.62552318540371!3d1.5597565984809045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da710019807d99%3A0xa6d37b19c36645c6!2sKolam%20Renang%20UTM!5e0!3m2!1sen!2smy!4v1761761713890!5m2!1sen!2smy"
+          width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-logo">
+        <img src="/images/logo.png" alt="AquaUTM Logo">
+        <span>AquaUTM</span>
+      </div>
+      <div class="footer-socials">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="/assets/slider.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</body>
+
+</html>
