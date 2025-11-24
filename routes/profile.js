@@ -9,7 +9,7 @@ router.get("/profile", async (req, res) => {
     if (!userId) return res.status(401).json({ error: "Not logged in" });
 
     const [rows] = await db.promise().query(
-      "SELECT id, first_name, last_name, email, twofa_enabled,created_at FROM users WHERE id= ?",
+      "SELECT id, first_name, last_name, email, twofa_enabled,created_at, role FROM users WHERE id= ?",
       [userId]
     );
 

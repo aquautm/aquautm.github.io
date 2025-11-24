@@ -11,6 +11,7 @@ fetch("/profile")
       "Email": user.email,
       "2FA Enabled": user.twofa_enabled ? "Yes" : "No",
       "Member Since": formattedDate,
+      "Role": user.role,
     };
 
     card.innerHTML = Object.entries(fields)
