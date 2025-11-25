@@ -80,9 +80,29 @@
 
         <section class="section" id="announcements">
             <h1>Manage Announcements</h1>
-            <div class="card">
-                <h3>Placeholder</h3>
-                <p>Placeholder</p>
+
+            <p class="subtitle">
+                Fill in the title and body of the announcement and press announce. 
+            </p>
+
+            <input type="text" class="announce-input" placeholder="Title">
+            <textarea class="announce-body" placeholder="Enter an announcement body"></textarea>
+
+            <div class="emergency-row">
+                <label>Is this an emergency notification?</label>
+
+                <div class="tooltip-wrapper">
+                    <span class="tooltip-icon">?</span>
+                    <div class="tooltip-box">This is for critical alerts only.</div>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="announce-btn">Announce</button>
             </div>
         </section>
 
@@ -94,30 +114,30 @@
                 <form id="event-form">
                     <label>Title</label>
                     <input type="text" class="form-control" name="title" required>
-                
+                                        
                     <label>Date</label>
                     <input type="date" class="form-control" name="date" required>
-                
+
                     <label>Event Type</label>
                     <select class="form-control" name="event_role" required>
                         <option value="all">All Users</option>
                         <option value="athlete">Athletes</option>
                         <option value="member">Members</option>
                     </select>
-                
+
                     <button type="submit">Add Event</button>
-                </form>                
+                </form>
             </div>
         </section>
-    
-       <!--profile page-->
-        <section class="section" id="profile">
-    <h1>Profile</h1>
 
-<!-- data will be fetched from db chack profile.js in assets for working-->
-    <div class="card" id="profile-card"></div>
-</section>
-    </main>    
+        <!--profile page-->
+        <section class="section" id="profile">
+            <h1>Profile</h1>
+
+            <!-- data will be fetched from db chack profile.js in assets for working-->
+            <div class="card" id="profile-card"></div>
+        </section>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
     <script src="/assets/calendar.js"></script>
