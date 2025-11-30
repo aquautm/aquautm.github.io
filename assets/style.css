@@ -945,7 +945,7 @@ input:checked + .slider:before {
 }
 
 .announce-btn {
-    background: #1E3748;
+    background: #1e90ff;
     color: white;
     padding: 12px 25px;
     border: none;
@@ -956,5 +956,5 @@ input:checked + .slider:before {
 }
 
 .announce-btn:hover {
-    background: #142a38;
+    background: #0f70d3;
 }

@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AquaUTM - Dashboard</title>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="/assets/style.css" rel="stylesheet">
 </head>
 
@@ -50,8 +49,7 @@
                 </li>
                 <li class="menu-item">
                     <form action="/logout" method="POST" style="display: inline;">
-                        <button type="submit" class="menu-link"
-                            style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
+                        <button type="submit" class="menu-link" style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
                             <span class="menu-icon material-symbols-rounded">logout</span>
                             <span class="menu-label">Logout</span>
                         </button>
@@ -76,19 +74,15 @@
                 </div>
             </div>
         </section>
-
+    
         <section class="section" id="announcements">
             <h1>Announcements</h1>
             <div class="card">
-                <p class="subtitle">
-                    Stay updated with the latest announcements.
-                </p>
-                <h3 class="small-title">TITLEEEEE</h3>
-                <p class="announce-body">BODYYYYY</p>
-                <span class="announce-date">Date posted: --/--/----</span>
+                <h3>From the Coach</h3>
+                <p>Placeholder</p>
             </div>
         </section>
-
+    
         <section class="section" id="schedule">
             <h1>Training Schedule</h1>
             <div class="card schedule-card">
@@ -96,15 +90,15 @@
             </div>
             <div id="calendar"></div>
         </section>
-
-        <!--profile page-->
+    
         <section class="section" id="profile">
             <h1>Profile</h1>
-
-            <!-- data will be fetched from db chack profile.js in assets for working-->
-            <div class="card" id="profile-card"></div>
+            <div class="card">
+                <p><strong>Name:</strong> Username</p>
+                <p><strong>Role:</strong> Athlete</p>
+            </div>
         </section>
-    </main>
+    </main>    
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
     <script src="/assets/calendar.js"></script>

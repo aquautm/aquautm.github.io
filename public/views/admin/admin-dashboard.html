@@ -79,39 +79,35 @@
         </section>
 
         <section class="section" id="announcements">
+
             <h1>Manage Announcements</h1>
+            <form action="/announcements/create" method="POST">
+  <label>Title*</label>
+  <input type="text" class="form-control" name="title" required>
 
-            <p class="subtitle">
-                Fill in the title and body of the announcement and press announce.
-            </p>
+  <label>Content*</label>
+  <textarea class="form-control" name="content" rows="4" required></textarea>
 
-            <input type="text" class="announce-input" placeholder="Title">
-            <textarea class="announce-body" placeholder="Enter an announcement body"></textarea>
+  <label>Link</label>
+  <input type="text" class="form-control" name="link">
 
-            <label class="small-title">Announcement For</label>
-            <select class="announce-target">
-                <option value="all">All Users</option>
-                <option value="athlete">Athletes</option>
-                <option value="member">Members</option>
-            </select>
+  <label>Image (URL)</label>
+  <input type="text" class="form-control" name="image_path">
+  
+  <label>Target Audience*</label>
+    <select name="target_role" class="form-control" required>
+        <option value="all">all</option>
+        <option value="member">members</option>
+        <option value="athlete">athlete</option>
+    </select>
+  
 
-            <div class="small-title">
-                <label>Is this an emergency notification?</label>
+  <button type="submit">Add Announcement</button>
+</form>
+<h3>Existing Announcements</h3>
+<div id="announcements-list"></div>
 
-                <div class="tooltip-wrapper">
-                    <span class="tooltip-icon">?</span>
-                    <div class="tooltip-box">This is for critical alerts only.</div>
-                </div>
-
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <button class="announce-btn">Announce</button>
-            </div>
-        </section>
+</section>
 
         <section class="section" id="schedule">
             <h1>Manage Schedules</h1>
@@ -150,6 +146,7 @@
     <script src="/assets/calendar.js"></script>
     <script src="/assets/sidebar.js"></script>
     <script src="/assets/profile.js"></script>
+    <script src="/assets/announcements.js"></script>
 </body>
 
 </html>
