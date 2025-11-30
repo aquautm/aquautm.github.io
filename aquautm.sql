@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     twofa_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    
 );
 
 -- Create login_logs table
@@ -71,3 +72,14 @@ INSERT INTO events (title, description, event_date, event_time, location) VALUES
     '10:00:00',
     'Kolam Renang UTM'
 );
+CREATE TABLE announcements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  image_path VARCHAR(500),
+  link VARCHAR(500),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_by INT,
+  FOREIGN KEY (created_by) REFERENCES users(id)
+);
+

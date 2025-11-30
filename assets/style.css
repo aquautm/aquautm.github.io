@@ -97,7 +97,7 @@ main {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 280px;
+    width: 500px;
     text-align: center;
     transition: transform 0.3s;
 }
@@ -129,7 +129,7 @@ main {
     color: #555;
     font-size: 1em;
     line-height: 1.5;
-    margin-top: 10px;
+    margin-top: 30px;
     text-align:justify;
 }
 
@@ -957,4 +957,40 @@ input:checked + .slider:before {
 
 .announce-btn:hover {
     background: #0f70d3;
+}
+
+.club-card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.club-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.15);
+}
+
+.club-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.club-images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.club-images img {
+    width: 250px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid #1e3d58;
 }
