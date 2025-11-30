@@ -945,7 +945,7 @@ input:checked + .slider:before {
 }
 
 .announce-btn {
-    background: #1e90ff;
+    background: #1E3748;
     color: white;
     padding: 12px 25px;
     border: none;
@@ -956,7 +956,7 @@ input:checked + .slider:before {
 }
 
 .announce-btn:hover {
-    background: #0f70d3;
+    background: #142a38;
 }
 
 .club-card {
