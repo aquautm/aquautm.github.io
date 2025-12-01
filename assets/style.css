@@ -958,3 +958,7 @@ input:checked + .slider:before {
 .announce-btn:hover {
     background: #0f70d3;
 }
+
+.club-images img{
+    width: 700px;
+}
