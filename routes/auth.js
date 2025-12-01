@@ -102,11 +102,23 @@ router.post("/login", async (req, res) => {
 
     console.log(`✅ Login successful for: ${email} (IP: ${ipAddress})`);
     // Set session
-    req.session.userId = user.id;
-    req.session.userRole = user.role;
-    // Redirect based on user role
-    const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-    res.redirect(dashboardPath);
+    req.session.user = {
+      id: user.id,
+      role: user.role, // This allows req.session.user.role to work
+      email: user.email,
+      firstName: user.first_name
+    };
+
+    // Force save to ensure cookie is ready before redirect
+    req.session.save(err => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).send("Session error.");
+      }
+
+      const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
+      res.redirect(dashboardPath);
+    });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).send("Login failed.");
@@ -146,11 +158,19 @@ router.post("/verify-2fa", async (req, res) => {
 
     console.log(`✅ 2FA login successful for: ${email}`);
     // Set session
-    req.session.userId = user.id;
-    req.session.userRole = user.role;
-    // Redirect based on user role
-    const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-    res.redirect(dashboardPath);
+    req.session.user = {
+      id: user.id,
+      role: user.role,
+      email: user.email,
+      firstName: user.first_name
+    };
+
+    req.session.save(err => {
+      if (err) return res.status(500).send("Session error");
+
+      const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
+      res.redirect(dashboardPath);
+    });
   } catch (err) {
     console.error("2FA verification error:", err);
     res.status(500).send("Verification failed.");
@@ -251,9 +271,14 @@ router.post("/logout", (req, res) => {
 });
 
 router.get("/me", (req, res) => {
-  res.json({
-    role: req.session.userRole || "guest"
-  });
+  if (req.session.user) {
+      res.json({
+        role: req.session.user.role,
+        name: req.session.user.firstName
+      });
+  } else {
+      res.json({ role: "guest" });
+  }
 });
 
 

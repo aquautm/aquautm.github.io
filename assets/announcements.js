@@ -29,7 +29,7 @@ function loadAnnouncements() {
 
         // ✅ Admin = editable inputs
         if (userRole === "admin") {
-div.innerHTML = `
+          div.innerHTML = `
   <label>Title:</label>
   <input value="${a.title}" id="title-${a.id}" class="form-control">
   
@@ -53,7 +53,7 @@ div.innerHTML = `
   <button onclick="updateAnnouncement(${a.id})">Update</button>
   <button onclick="deleteAnnouncement(${a.id})" style="background:red;">Delete</button>
 `;
-        }else {
+        } else {
           div.innerHTML = `
             <h3>${a.title}</h3>
             <p>${a.content}</p>
