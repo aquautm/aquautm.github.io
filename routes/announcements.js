@@ -3,15 +3,14 @@ const db = require("../db");
 
 const router = express.Router();
 
-// CREATE announcement (admin only)
 router.post("/announcements/create", async (req, res) => {
-  if (req.session.userRole !== "admin") {
+  if (!req.session.user || req.session.user.role !== "admin") {
     return res.status(403).send("Not allowed");
   }
 
   const { title, content, image_path, link, target_role } = req.body;
 
-   const safeTargetRole = ["member", "athlete", "all"].includes(target_role)
+  const safeTargetRole = ["member", "athlete", "all"].includes(target_role)
     ? target_role
     : "all";
 
@@ -19,7 +18,7 @@ router.post("/announcements/create", async (req, res) => {
     await db.promise().query(
       `INSERT INTO announcements (title, content, image_path, link, target_role, created_by)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, content, image_path, link, safeTargetRole, req.session.userId]
+      [title, content, image_path, link, safeTargetRole, req.session.user.id] // <--- FIXED: user.id
     );
 
     res.redirect("/admin-dashboard");
@@ -27,13 +26,14 @@ router.post("/announcements/create", async (req, res) => {
     console.error("Create announcement error:", err);
     res.status(500).send("Failed to create announcement");
   }
-  console.log("REQ BODY:", req.body);
-
 });
 
-// FETCH announcements (everyone)
 router.get("/announcements", async (req, res) => {
-  const userRole = req.session.userRole || "member"; 
+  if (!req.session.user) {
+     return res.status(401).json({ error: "Please log in" });
+  }
+
+  const userRole = req.session.user.role;
 
   try {
     const [rows] = await db.promise().query(`
@@ -55,10 +55,8 @@ router.get("/announcements", async (req, res) => {
   }
 });
 
-
-// DELETE announcement (admin only)
 router.delete("/announcements/:id", async (req, res) => {
-  if (req.session.userRole !== "admin") {
+  if (!req.session.user || req.session.user.role !== "admin") {
     return res.status(403).send("Not allowed");
   }
 
@@ -75,9 +73,8 @@ router.delete("/announcements/:id", async (req, res) => {
   }
 });
 
-// EDIT announcement (admin only)
 router.put("/announcements/:id", async (req, res) => {
-  if (req.session.userRole !== "admin") {
+  if (!req.session.user || req.session.user.role !== "admin") {
     return res.status(403).send("Not allowed");
   }
 
@@ -102,19 +99,16 @@ router.put("/announcements/:id", async (req, res) => {
   }
 });
 
-// GET current user info (For frontend role checking)
 router.get("/me", (req, res) => {
-  if (req.session && req.session.userRole) {
+  if (req.session.user) {
     res.json({ 
-      id: req.session.userId, 
-      role: req.session.userRole, 
-      name: req.session.firstName 
+      id: req.session.user.id,
+      role: req.session.user.role,
+      name: req.session.user.firstName
     });
   } else {
     res.status(401).json({ error: "Not logged in" });
   }
 });
-
-
 
 module.exports = router;
