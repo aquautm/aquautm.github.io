@@ -238,6 +238,7 @@ router.post("/enable-2fa", async (req, res) => {
   }
 });
 
+
 // Logout route
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
@@ -248,5 +249,12 @@ router.post("/logout", (req, res) => {
     res.redirect("/");
   });
 });
+
+router.get("/me", (req, res) => {
+  res.json({
+    role: req.session.userRole || "guest"
+  });
+});
+
 
 module.exports = router;

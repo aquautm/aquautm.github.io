@@ -1,3 +1,6 @@
+
+
+
 require('dotenv').config();
 
 const express = require("express");
@@ -8,7 +11,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false}));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
@@ -20,9 +23,16 @@ app.use(express.static(path.join(__dirname, "")));
 // Routes
 const pagesRouter = require("./routes/pages");
 const authRouter = require("./routes/auth");
+const profileRoutes = require("./routes/profile");
+const announcementRoutes = require("./routes/announcements");
 
+
+
+app.use(announcementRoutes);
+app.use("/", profileRoutes);
 app.use("/", pagesRouter);
 app.use("/", authRouter);
+
 
 
 
