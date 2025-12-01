@@ -38,8 +38,8 @@ router.post("/signup", async (req, res) => {
 
     // Insert into SQL
     await db.promise().query(
-      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, ?, true)",
-      [firstName, lastName, `${firstName.toLowerCase()}.${lastName.toLowerCase()}`, email, hashedPassword]
+      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled,role) VALUES (?, ?, ?, ?, true,)",
+      [firstName, lastName,  email, hashedPassword,]
     );
 
     console.log("✅ New user registered:", email);
