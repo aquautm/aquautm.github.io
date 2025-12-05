@@ -100,8 +100,82 @@
         <section class="section" id="profile">
             <h1>Profile</h1>
 
-            <!-- data will be fetched from db chack profile.js in assets for working-->
-            <div class="card" id="profile-card"></div>
+            <div class="profile-grid">
+                <div class="card profile-left">
+
+                    <div class="card-header">
+                        <h3 class="mb-0">Profile</h3>
+                    </div>
+
+                    <img id="profile-img" class="profile-image-lg">
+
+                    <p class="mt-4 mb-2 upload-label">Upload New Profile Picture:</p>
+
+                    <form id="profile-pic-form" enctype="multipart/form-data" class="upload-form">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <input type="file" id="profile_pic" name="profile_pic" class="form-control w-75"
+                                accept="image/*" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success upload-btn">
+                            Upload Picture
+                        </button>
+                    </form>
+
+                    <p id="pic-message" class="status-msg"></p>
+
+                    <!-- data will be fetched from db check profile.js in assets for working-->
+                    <div id="profile-card"></div>
+                    <!-- how to make this data align left? -->
+
+                    <div class="twofa-toggle-container mt-3 d-flex align-items-center justify-content-between">
+                        <span>Two-Factor Authentication</span>
+                        <label class="switch">
+                            <input type="checkbox" id="twofa-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <div class="card mb-4">
+                        <h3>Update Profile Information</h3>
+
+                        <form id="update-profile-form">
+                            <label>Name</label>
+                            <input type="text" id="name" name="name" required>
+
+                            <label>Email</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <button type="submit">Update Profile</button>
+                        </form>
+
+                        <p id="profile-message"></p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Change Password</h3>
+
+                        <form id="password-form">
+                            <label>Current Password</label>
+                            <input type="password" id="current_password" required>
+
+                            <label>New Password</label>
+                            <input type="password" id="new_password" required>
+
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirm_password" required>
+
+                            <button type="submit">Change Password</button>
+                        </form>
+
+                        <p id="password-message"></p>
+                    </div>
+
+                </div>
+
+            </div>
         </section>
 
     </main>
