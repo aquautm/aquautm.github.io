@@ -23,30 +23,32 @@ router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    return res.send("Passwords do not match.");
+    return res.status(400).json({ success: false, message: "Passwords do not match." });
   }
 
   try {
-    // Check for existing user
     const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
     if (rows.length > 0) {
-      return res.send("User already exists. Please use a different email.");
+      return res.status(400).json({ success: false, message: "User already exists. Please use a different email." });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert into SQL
     await db.promise().query(
-      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, ?, true)",
-      [firstName, lastName, `${firstName.toLowerCase()}.${lastName.toLowerCase()}`, email, hashedPassword]
+      "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, 1)",
+      [firstName, lastName, email, hashedPassword]
     );
 
     console.log("✅ New user registered:", email);
-    res.redirect("/login");
+
+    console.log("✅ New user registered:", email);
+
+    // Send JSON success instead of redirecting
+    res.json({ success: true, message: "Signup successful!" });
+
   } catch (err) {
     console.error("Error during signup:", err);
-    res.status(500).send("Error registering user.");
+    res.status(500).json({ success: false, message: "Error registering user." });
   }
 });
 
@@ -58,28 +60,27 @@ router.post("/login", async (req, res) => {
 
   try {
     const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+
     if (rows.length === 0) {
-      return res.send("Email not found. Please sign up first.");
+      return res.status(401).json({ success: false, message: "Email not found. Please sign up first." });
     }
 
     const user = rows[0];
     const isPasswordMatch = await bcrypt.compare(password, user.password);
+
     if (!isPasswordMatch) {
-      return res.send("Incorrect password.");
+      return res.status(401).json({ success: false, message: "Incorrect password." });
     }
 
     if (user.twofa_enabled) {
-      // Generate 6-digit code
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-      // Store code
       await db.promise().query(
         "INSERT INTO verification_codes (user_id, email, code, expires_at) VALUES (?, ?, ?, ?)",
         [user.id, email, code, expiresAt]
       );
 
-      // Send email
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -89,39 +90,30 @@ router.post("/login", async (req, res) => {
 
       await transporter.sendMail(mailOptions);
 
-      // Redirect to 2FA page with email in session (simplified)
-      res.redirect(`/verify-2fa?email=${encodeURIComponent(email)}`);
-      return;
+      return res.json({
+        success: true,
+        redirectUrl: `/verify-2fa?email=${encodeURIComponent(email)}`
+      });
     }
 
-    // ✅ Log the login event
     await db.promise().query(
       "INSERT INTO login_logs (user_id, email, ip_address, user_agent) VALUES (?, ?, ?, ?)",
       [user.id, email, ipAddress, userAgent]
     );
 
-    console.log(`✅ Login successful for: ${email} (IP: ${ipAddress})`);
-    // Set session
-    req.session.user = {
-      id: user.id,
-      role: user.role, // This allows req.session.user.role to work
-      email: user.email,
-      firstName: user.first_name
-    };
+    console.log(`✅ Login successful for: ${email}`);
 
-    // Force save to ensure cookie is ready before redirect
-    req.session.save(err => {
-      if (err) {
-        console.error("Session save error:", err);
-        return res.status(500).send("Session error.");
-      }
+    req.session.user = user;
+    req.session.userId = user.id;
+    req.session.userRole = user.role;
 
-      const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-      res.redirect(dashboardPath);
-    });
+    const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
+
+    res.json({ success: true, redirectUrl: dashboardPath });
+
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).send("Login failed.");
+    res.status(500).json({ success: false, message: "Login failed due to server error." });
   }
 });
 
@@ -138,7 +130,7 @@ router.post("/verify-2fa", async (req, res) => {
     );
 
     if (rows.length === 0) {
-      return res.send("Invalid or expired code.");
+      return res.status(400).json({ success: false, message: "Invalid or expired code." });
     }
 
     const verification = rows[0];
@@ -157,34 +149,37 @@ router.post("/verify-2fa", async (req, res) => {
     );
 
     console.log(`✅ 2FA login successful for: ${email}`);
-    // Set session
-    req.session.user = {
-      id: user.id,
-      role: user.role,
-      email: user.email,
-      firstName: user.first_name
-    };
 
-    req.session.save(err => {
-      if (err) return res.status(500).send("Session error");
+    // IMPORTANT: Set full user object for app.js middleware
+    req.session.user = user;
+    req.session.userId = user.id;
+    req.session.userRole = user.role;
 
-      const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-      res.redirect(dashboardPath);
-    });
+    // Determine dashboard URL
+    const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
+
+    // Send JSON success with redirect URL
+    res.json({ success: true, redirectUrl: dashboardPath });
+
   } catch (err) {
     console.error("2FA verification error:", err);
-    res.status(500).send("Verification failed.");
+    res.status(500).json({ success: false, message: "Verification failed." });
   }
 });
 
+// Forgot password route
 // Forgot password route
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
   try {
     const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+
     if (rows.length === 0) {
-      return res.send("If an account with that email exists, a reset link has been sent.");
+      return res.json({
+        success: true,
+        message: "If an account with that email exists, a reset link has been sent."
+      });
     }
 
     const user = rows[0];
@@ -207,10 +202,14 @@ router.post("/forgot-password", async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.redirect("/login");
+    res.json({
+      success: true,
+      message: "If an account with that email exists, a reset link has been sent."
+    });
+
   } catch (err) {
     console.error("Forgot password error:", err);
-    res.status(500).send("Error sending reset email.");
+    res.status(500).json({ success: false, message: "Error sending reset email." });
   }
 });
 
@@ -258,7 +257,6 @@ router.post("/enable-2fa", async (req, res) => {
   }
 });
 
-
 // Logout route
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
@@ -272,14 +270,13 @@ router.post("/logout", (req, res) => {
 
 router.get("/me", (req, res) => {
   if (req.session.user) {
-      res.json({
-        role: req.session.user.role,
-        name: req.session.user.firstName
-      });
+    res.json({
+      role: req.session.user.role,
+      name: req.session.user.firstName
+    });
   } else {
-      res.json({ role: "guest" });
+    res.json({ role: "guest" });
   }
 });
-
 
 module.exports = router;

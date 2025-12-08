@@ -58,28 +58,27 @@ router.post("/login", async (req, res) => {
 
   try {
     const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+    
     if (rows.length === 0) {
-      return res.send("Email not found. Please sign up first.");
+      return res.status(401).json({ success: false, message: "Email not found. Please sign up first." });
     }
 
     const user = rows[0];
     const isPasswordMatch = await bcrypt.compare(password, user.password);
+    
     if (!isPasswordMatch) {
-      return res.send("Incorrect password.");
+      return res.status(401).json({ success: false, message: "Incorrect password." });
     }
 
     if (user.twofa_enabled) {
-      // Generate 6-digit code
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
 
-      // Store code
       await db.promise().query(
         "INSERT INTO verification_codes (user_id, email, code, expires_at) VALUES (?, ?, ?, ?)",
         [user.id, email, code, expiresAt]
       );
 
-      // Send email
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -89,27 +88,30 @@ router.post("/login", async (req, res) => {
 
       await transporter.sendMail(mailOptions);
 
-      // Redirect to 2FA page with email in session (simplified)
-      res.redirect(`/verify-2fa?email=${encodeURIComponent(email)}`);
-      return;
+      return res.json({ 
+          success: true, 
+          redirectUrl: `/verify-2fa?email=${encodeURIComponent(email)}` 
+      });
     }
 
-    // ✅ Log the login event
     await db.promise().query(
       "INSERT INTO login_logs (user_id, email, ip_address, user_agent) VALUES (?, ?, ?, ?)",
       [user.id, email, ipAddress, userAgent]
     );
 
-    console.log(`✅ Login successful for: ${email} (IP: ${ipAddress})`);
-    // Set session
+    console.log(`✅ Login successful for: ${email}`);
+    
+    req.session.user = user;
     req.session.userId = user.id;
     req.session.userRole = user.role;
-    // Redirect based on user role
+
     const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-    res.redirect(dashboardPath);
+    
+    res.json({ success: true, redirectUrl: dashboardPath });
+
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).send("Login failed.");
+    res.status(500).json({ success: false, message: "Login failed due to server error." });
   }
 });
 
@@ -126,7 +128,7 @@ router.post("/verify-2fa", async (req, res) => {
     );
 
     if (rows.length === 0) {
-      return res.send("Invalid or expired code.");
+      return res.status(400).json({ success: false, message: "Invalid or expired code." });
     }
 
     const verification = rows[0];
@@ -145,15 +147,18 @@ router.post("/verify-2fa", async (req, res) => {
     );
 
     console.log(`✅ 2FA login successful for: ${email}`);
-    // Set session
+    
+    req.session.user = user; 
     req.session.userId = user.id;
     req.session.userRole = user.role;
-    // Redirect based on user role
+
     const dashboardPath = user.role === 'admin' ? '/admin-dashboard' : user.role === 'athlete' ? '/athlete-dashboard' : '/member-dashboard';
-    res.redirect(dashboardPath);
+    
+    res.json({ success: true, redirectUrl: dashboardPath });
+
   } catch (err) {
     console.error("2FA verification error:", err);
-    res.status(500).send("Verification failed.");
+    res.status(500).json({ success: false, message: "Verification failed." });
   }
 });
 

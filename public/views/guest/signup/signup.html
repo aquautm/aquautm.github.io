@@ -25,7 +25,7 @@
             <h2>Sign Up Now!</h2>
             <p>You are one step away from joining us.</p>
 
-            <form action="/signup" method="post">
+            <form id="signupForm">
                 <div class="input-group">
                     <div style="flex:1;">
                         <label>First Name <span class="required">*</span></label>
@@ -96,16 +96,40 @@
             field.type = field.type === 'password' ? 'text' : 'password';
         }
 
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            
             if (password !== confirmPassword) {
-                e.preventDefault();
                 alert('Passwords do not match!');
+                return;
+            }
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert("Signup successful!");
+                    window.location.href = '/login';
+                } else {
+                    alert(result.message || "Signup failed. Please try again");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred. Please try again.");
             }
         });
     </script>
-
 </body>
-
 </html>
