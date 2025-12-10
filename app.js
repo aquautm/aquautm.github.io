@@ -52,27 +52,89 @@ app.post('/api/events', isAuthenticated, async (req, res) => {
 
 app.get('/api/events', isAuthenticated, async (req, res) => {
   const userRole = req.session.user.role;
-
   let query = '';
   let params = [];
 
   if (userRole === 'admin') {
-    query = 'SELECT title, start_date as start, end_date as end, target_role FROM schedules';
+    query = 'SELECT id, title, start_date as start, end_date as end, target_role as role FROM schedules';
   } else {
-    query = 'SELECT title, start_date as start, end_date as end FROM schedules WHERE target_role = ? OR target_role = "all"';
+    query = 'SELECT id, title, start_date as start, end_date as end, target_role as role FROM schedules WHERE target_role = ? OR target_role = "all"';
     params = [userRole];
   }
 
   try {
     const [results] = await db.promise().query(query, params);
+    
+    const events = results.map(event => ({
+        id: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        extendedProps: {
+            role: event.role
+        }
+    }));
 
-    res.json(results);
+    res.json(events);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
+app.post('/api/events', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  const { title, start_date, end_date, event_role } = req.body;
+  const finalEndDate = end_date ? end_date : null;
+
+  try {
+    const query = 'INSERT INTO schedules (title, start_date, end_date, target_role) VALUES (?, ?, ?, ?)';
+    const [result] = await db.promise().query(query, [title, start_date, finalEndDate, event_role]);
+    res.json({ success: true, id: result.insertId, message: 'Event added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.put('/api/events/:id', isAuthenticated, async (req, res) => {
+    if (req.session.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    const { id } = req.params;
+    const { title, start_date, end_date, event_role } = req.body;
+    const finalEndDate = end_date ? end_date : null;
+
+    try {
+        const query = 'UPDATE schedules SET title = ?, start_date = ?, end_date = ?, target_role = ? WHERE id = ?';
+        await db.promise().query(query, [title, start_date, finalEndDate, event_role, id]);
+        res.json({ success: true, message: 'Event updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.delete('/api/events/:id', isAuthenticated, async (req, res) => {
+    if (req.session.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    const { id } = req.params;
+
+    try {
+        const query = 'DELETE FROM schedules WHERE id = ?';
+        await db.promise().query(query, [id]);
+        res.json({ success: true, message: 'Event deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
 app.get('/api/dashboard/upcoming', isAuthenticated, async (req, res) => {
   const userRole = req.session.user.role;
 
