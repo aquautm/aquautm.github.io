@@ -179,12 +179,81 @@ app.get('/api/dashboard/announcement', isAuthenticated, async (req, res) => {
 
 app.get('/me', (req, res) => {
   if (req.session.user) {
-    res.json({ 
-      name: req.session.user.first_name, 
-      role: req.session.user.role 
+    res.json({
+      name: req.session.user.first_name,
+      role: req.session.user.role
     });
   } else {
     res.status(401).json({ error: "Not logged in" });
+  }
+});
+
+app.get('/api/dashboard/stats', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    // Total users
+    const [totalUsers] = await db.promise().query('SELECT COUNT(*) as count FROM users');
+    // Active today: distinct logins today
+    const [activeToday] = await db.promise().query('SELECT COUNT(DISTINCT user_id) as count FROM login_logs WHERE DATE(login_time) = CURDATE()');
+    // New this month
+    const [newMonth] = await db.promise().query('SELECT COUNT(*) as count FROM users WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())');
+    // Announcements
+    const [announcements] = await db.promise().query('SELECT COUNT(*) as count FROM announcements');
+
+    res.json({
+      totalUsers: totalUsers[0].count,
+      activeToday: activeToday[0].count,
+      newMonth: newMonth[0].count,
+      announcements: announcements[0].count
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/dashboard/user-activity', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const query = `
+      SELECT DATE(login_time) as date, COUNT(*) as count
+      FROM login_logs
+      WHERE login_time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+      GROUP BY DATE(login_time)
+      ORDER BY date
+    `;
+    const [results] = await db.promise().query(query);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/dashboard/recent-logs', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const query = `
+      SELECT ll.login_time, u.first_name, u.last_name, ll.ip_address
+      FROM login_logs ll
+      JOIN users u ON ll.user_id = u.id
+      ORDER BY ll.login_time DESC
+      LIMIT 10
+    `;
+    const [results] = await db.promise().query(query);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
