@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS verification_codes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Example evens
+-- Example events
 INSERT INTO events (title, description, event_date, event_time, location) VALUES
 (
     'Swimming Competition - December 2023',

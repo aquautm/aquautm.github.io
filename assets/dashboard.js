@@ -64,7 +64,10 @@ function loadLatestAnnouncement() {
 
 function loadUserInfo() {
     fetch('/me')
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error("Not logged in");
+            return res.json();
+        })
         .then(user => {
             const nameSpan = document.getElementById('dynamic-user-name');
             

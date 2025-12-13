@@ -25,14 +25,14 @@
             <h2>Login</h2>
             <p>Welcome back.</p>
 
-            <form action="/login" method="post">
+            <form id="loginForm">
                 <label>Email <span class="required">*</span></label>
                 <input type="email" name="email" required>
-
+            
                 <label>Password <span class="required">*</span></label>
                 <input type="password" name="password" required>
                 <br><br>
-
+            
                 <button type="submit">Log In</button>
             </form>
 
@@ -41,7 +41,6 @@
                 <br>Don't have an account? <a href="/signup">Sign Up</a>
             </div>
 
-            
         </div>
     </main>
 
@@ -54,7 +53,10 @@
             </div>
 
             <div class="footer-map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31906.720104878943!2d103.62552318540371!3d1.5597565984809045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da710019807d99%3A0xa6d37b19c36645c6!2sKolam%20Renang%20UTM!5e0!3m2!1sen!2smy!4v1761761713890!5m2!1sen!2smy" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31906.720104878943!2d103.62552318540371!3d1.5597565984809045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da710019807d99%3A0xa6d37b19c36645c6!2sKolam%20Renang%20UTM!5e0!3m2!1sen!2smy!4v1761761713890!5m2!1sen!2smy"
+                    width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
 
@@ -74,6 +76,37 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop the page from reloading immediately
+    
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+    
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+    
+                const result = await response.json();
+    
+                if (result.success) {
+                    alert("Login successful!"); 
+                    
+                    window.location.href = result.redirectUrl;
+                } else {
+                    alert(result.message || "Login failed. Please try again.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
 </body>
 
 </html>

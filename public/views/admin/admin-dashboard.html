@@ -40,6 +40,18 @@
                         <span class="menu-label">Schedule</span>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon material-symbols-rounded">trophy</span>
+                        <span class="menu-label">Tournaments</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon material-symbols-rounded">group</span>
+                        <span class="menu-label">Members</span>
+                    </a>
+                </li>
             </ul>
 
             <ul class="menu-list secondary-menu">
@@ -65,90 +77,366 @@
     <main class="main-content">
         <section class="section active" id="dashboard">
             <h1>Welcome to AquaUTM, <span id="dynamic-user-name">User</span>!</h1>
-            <p>Your personalized space for announcements, schedules, and club management.</p>
-            <div class="card-grid">
-                <div class="card">
-                    <h3>Placeholder</h3>
-                    <p>Placeholder</p>
+            <p class="dashboard-subtitle">Here is AquaUTM's system overview.</p><br>
+
+            <div class="dashboard-stats-grid">
+                <div class="stats-card">
+                    <div class="stats-label">Total Users</div>
+                    <div class="stats-value" id="stats-total-users">0</div>
                 </div>
-                <div class="card">
-                    <h3>Placeholder</h3>
-                    <p>Placeholder</p>
+
+                <div class="stats-card">
+                    <div class="stats-label">Active Today</div>
+                    <div class="stats-value" id="stats-active-today">0</div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-label">New This Month</div>
+                    <div class="stats-value" id="stats-new-month">0</div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-label">Announcements</div>
+                    <div class="stats-value" id="stats-announcements">0</div>
                 </div>
             </div>
+
+            <div class="card chart-card">
+                <h3>User Activity (Last 7 Days)</h3>
+                <canvas id="user-activity-chart" height="140"></canvas>
+            </div>
+
+            <div class="card recent-card">
+                <h3>Recent System Activity</h3>
+                <ul id="recent-logs" class="recent-list">
+                    <li>Loading activity...</li>
+                </ul>
+            </div>
+
         </section>
 
         <section class="section" id="announcements">
 
             <h1>Manage Announcements</h1>
+            <p class="dashboard-subtitle">Post new announcements.</p>
+
             <form action="/announcements/create" method="POST">
-  <label>Title*</label>
-  <input type="text" class="form-control" name="title" required>
+                <label>Title*</label>
+                <input type="text" class="form-control" name="title" required>
 
-  <label>Content*</label>
-  <textarea class="form-control" name="content" rows="4" required></textarea>
+                <label>Content*</label>
+                <textarea class="form-control" name="content" rows="4" required></textarea>
 
-  <label>Link</label>
-  <input type="text" class="form-control" name="link">
+                <label>Link</label>
+                <input type="text" class="form-control" name="link">
 
-  <label>Image (URL)</label>
-  <input type="text" class="form-control" name="image_path">
-  <label>Target Audience*</label>
-    <select name="target_role" class="form-control" required>
-        <option value="all">all</option>
-        <option value="member">members</option>
-        <option value="athlete">athlete</option>
-    </select>
-  
+                <label>Image (URL)</label>
+                <input type="text" class="form-control" name="image_path">
 
-  <button type="submit">Add Announcement</button>
-</form>
-<h3>Existing Announcements</h3>
-<div id="announcements-list"></div>
+                <label>Target Audience*</label>
+                <select name="target_role" class="form-control" required>
+                    <option value="all">all</option>
+                    <option value="member">members</option>
+                    <option value="athlete">athlete</option>
+                </select>
 
-</section>
+
+                <button type="submit">Add Announcement</button>
+            </form>
+            <h3>Existing Announcements</h3>
+            <div id="announcements-list"></div>
+
+        </section>
 
         <section class="section" id="schedule">
             <h1>Manage Schedules</h1>
+            <p class="dashboard-subtitle">Click on any event in the calendar to Edit or Delete it.</p>
+
             <div id="calendar"></div>
+
             <div class="card schedule-card">
                 <h3>Add New Event</h3>
                 <form id="event-form">
+                    <input type="hidden" name="event_id" id="event_id">
+
                     <label>Title</label>
-                    <input type="text" class="form-control" name="title" required>
+                    <input type="text" class="form-control" name="title" id="event_title" required>
 
                     <label>Start Date & Time</label>
-                    <input type="datetime-local" class="form-control" name="start_date" required>
+                    <input type="datetime-local" class="form-control" name="start_date" id="event_start" required>
 
                     <label>End Date & Time (Optional)</label>
-                    <input type="datetime-local" class="form-control" name="end_date">
+                    <input type="datetime-local" class="form-control" name="end_date" id="event_end">
 
                     <label>Event Type</label>
-                    <select class="form-control" name="event_role" required>
+                    <select class="form-control" name="event_role" id="event_role" required>
                         <option value="all">All Users</option>
                         <option value="athlete">Athletes</option>
                         <option value="member">Members</option>
                     </select>
 
-                    <button type="submit">Add Event</button>
+                    <div class="modal-footer" id="form-actions">
+                        <button type="submit" id="save-event-btn">Add Event</button>
+                        <button type="button" id="cancel-edit-btn" class="btn-secondary"
+                            style="display:none;">Cancel</button>
+                    </div>
                 </form>
+            </div>
+
+            <div id="calendar-modal" class="custom-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-event-title">Event Details</h3>
+                        <button class="close-modal" onclick="closeModal('calendar-modal')">&times;</button>
+                    </div>
+                    <p id="modal-event-info">Time: ...</p>
+                    <div class="modal-footer">
+                        <button id="modal-edit-btn" class="btn-primary">Edit</button>
+                        <button id="modal-delete-btn" class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="members">
+            <h1>Manage Members</h1>
+            <p class="dashboard-subtitle">View, edit, and manage users.</p>
+
+            <div class="card">
+                <div class="members-toolbar">
+                    <div class="search-box">
+                        <span class="material-symbols-rounded search-icon">search</span>
+                        <input type="text" id="member-search" class="form-control"
+                            placeholder="Search by name or email...">
+                    </div>
+                    <div class="filter-box">
+                        <select id="role-filter" class="form-control">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="athlete">Athlete</option>
+                            <option value="member">Member</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card table-card">
+                <div class="table-responsive">
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-list">
+                            <!-- backend data fetching here -->
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <img src="/images/default-profile.png" alt="User" class="table-avatar">
+                                        <span class="user-name">Username here</span>
+                                    </div>
+                                </td>
+                                <td>Email here</td>
+                                <td><span class="role-badge role-athlete">Role here</span></td>
+                                <td><span class="status-dot active"></span> Active state here</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon edit" title="Edit Role">
+                                            <span class="material-symbols-rounded">edit</span>
+                                        </button>
+                                        <button class="btn-icon delete" title="Remove User">
+                                            <span class="material-symbols-rounded">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="tournaments">
+            <h1>Tournament Administration</h1>
+            <p class="dashboard-subtitle">Manage tournament details and registrations.</p>
+
+            <div class="card">
+                <h3 id="tournament-form-title">Create New Tournament</h3>
+                <form id="create-tournament-form">
+                    <input type="hidden" name="tournament_id" id="tournament_id">
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Tournament Name<span class="required">*</span></label>
+                            <input type="text" class="form-control" name="name" id="tourn_name"
+                                placeholder="e.g. UTM Annual Swim Meet" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date*</label>
+                            <input type="date" class="form-control" name="date" id="tourn_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Venue*</label>
+                            <input type="text" class="form-control" name="venue" id="tourn_venue" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" style="justify-content: flex-start; padding: 0;">
+                        <button type="submit" id="save-tourn-btn">Create Tournament</button>
+                        <button type="button" id="cancel-tourn-btn" class="btn-secondary" style="display:none;">Cancel
+                            Edit</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card table-card">
+                <h3>Existing Tournaments</h3>
+                <div class="table-responsive">
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Venue</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tournaments-list-body">
+                            <!-- data fetched shown here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card table-card">
+                <h3>Athlete Registrations</h3>
+                <div class="table-responsive">
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>Athlete</th>
+                                <th>Tournament</th>
+                                <th>Events</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-registrations-list">
+                            <!-- data fetched shown here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
         <!--profile page-->
         <section class="section" id="profile">
             <h1>Profile</h1>
+            <p class="dashboard-subtitle">Edit your profile information.</p><br>
 
-            <!-- data will be fetched from db chack profile.js in assets for working-->
-            <div class="card" id="profile-card"></div>
+            <div class="profile-grid">
+                <div class="card profile-left">
+
+                    <div class="card-header">
+                        <h3 class="mb-0">Profile</h3>
+                    </div>
+
+                    <img id="profile-img" class="profile-image-lg">
+
+                    <p class="mt-4 mb-2 upload-label">Upload New Profile Picture:</p>
+
+                    <form id="profile-pic-form" enctype="multipart/form-data" class="upload-form">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <input type="file" id="profile_pic" name="profile_pic" class="form-control w-75"
+                                accept="image/*" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success upload-btn">
+                            Upload Picture
+                        </button>
+                    </form>
+
+                    <p id="pic-message" class="status-msg"></p>
+
+                    <!-- data will be fetched from db check profile.js in assets for working-->
+                    <div id="profile-card"></div>
+
+                    <div class="profile-settings-group">
+
+                        <div class="setting-row">
+                            <span class="setting-label">Two-Factor Authentication</span>
+                            <label class="switch">
+                                <input type="checkbox" id="twofa-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-row">
+                            <span class="setting-label">Notifications</span>
+                            <label class="switch">
+                                <input type="checkbox" id="notifications-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <div class="card mb-4">
+                        <h3>Update Profile Information</h3>
+
+                        <form id="update-profile-form">
+                            <label>Name</label>
+                            <input type="text" id="name" name="name" required>
+
+                            <label>Email</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <button type="submit">Update Profile</button>
+                        </form>
+
+                        <p id="profile-message"></p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Change Password</h3>
+
+                        <form id="password-form">
+                            <label>Current Password</label>
+                            <input type="password" id="current_password" required>
+
+                            <label>New Password</label>
+                            <input type="password" id="new_password" required>
+
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirm_password" required>
+
+                            <button type="submit">Change Password</button>
+                        </form>
+
+                        <p id="password-message"></p>
+                    </div>
+
+                </div>
+
+            </div>
         </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/assets/dashboard.js"></script>
     <script src="/assets/calendar.js"></script>
     <script src="/assets/sidebar.js"></script>
     <script src="/assets/profile.js"></script>
     <script src="/assets/announcements.js"></script>
+    <script src="/assets/tournaments.js"></script>
 </body>
 
 </html>

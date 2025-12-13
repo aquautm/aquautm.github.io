@@ -25,7 +25,7 @@
             <h2>Two-Factor Authentication</h2>
             <p>Enter the 6-digit code sent to your email.</p>
 
-            <form action="/verify-2fa" method="post">
+            <form id="verifyForm">
                 <input type="hidden" name="email" id="emailInput">
 
                 <label>Verification Code <span class="required">*</span></label>
@@ -35,12 +35,38 @@
             </form>
 
             <script>
-                // Extract email from URL query parameter and set it in the hidden input
                 const urlParams = new URLSearchParams(window.location.search);
                 const email = urlParams.get('email');
                 if (email) {
                     document.getElementById('emailInput').value = email;
                 }
+
+                document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch('/verify-2fa', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            alert("Verification successful!");
+                            window.location.href = result.redirectUrl;
+                        } else {
+                            alert(result.message || "Verification failed. Please log in again.");
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert("An error occurred. Please try again.");
+                    }
+                });
             </script>
 
             <div class="login-link">
@@ -77,7 +103,5 @@
     </footer>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </body>
-
 </html>

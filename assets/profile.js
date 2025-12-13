@@ -3,24 +3,28 @@ fetch("/profile")
   .then(user => {
     const card = document.getElementById("profile-card");
     const options = { year: "numeric", month: "short", day: "numeric" };
-    const formattedDate = new Date(user.created_at).toLocaleDateString("en-US", options);
-
+    const formattedDate = user.created_at ? new Date(user.created_at).toLocaleDateString("en-US", options) : "N/A";
 
     const fields = {
-      "Name": user.first_name + " " + user.last_name,
+      "Name": `${user.first_name} ${user.last_name}`,
       "Email": user.email,
-      "2FA Enabled": user.twofa_enabled ? "Yes" : "No",
-      "Member Since": formattedDate,
       "Role": user.role,
+      "Member Since": formattedDate,
     };
-
-    card.innerHTML = Object.entries(fields)
-      .map(([label, value]) => `
-        <p><strong>${label}:</strong> ${value}</p>
-      `)
-      .join("");
+    
+    let htmlContent = '<div class="profile-details-grid">';
+    
+    Object.entries(fields).forEach(([label, value]) => {
+        htmlContent += `
+            <div class="detail-label">${label}</div>
+            <div class="detail-value">${value}</div>
+        `;
+    });
+    
+    htmlContent += '</div>';
+    card.innerHTML = htmlContent;
   })
   .catch(err => {
-    document.getElementById("profile-card").innerHTML = "<p>Error loading profile.</p>";
+    console.error(err);
+    document.getElementById("profile-card").innerHTML = '<p class="text-danger">Error loading profile.</p>';
   });
-

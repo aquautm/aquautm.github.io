@@ -39,6 +39,12 @@
                         <span class="menu-label">Schedule</span>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon material-symbols-rounded">emoji_events</span>
+                        <span class="menu-label">Tournaments</span>
+                    </a>
+                </li>
             </ul>
 
             <ul class="menu-list secondary-menu">
@@ -64,7 +70,7 @@
     <main class="main-content">
         <section class="section active" id="dashboard">
             <h1>Welcome to AquaUTM, <span id="dynamic-user-name">User</span>!</h1>
-            <p>Your personalized space for announcements, schedules, and club management.</p>
+            <p class="dashboard-subtitle">Your personalized space for club announcements and schedules.</p><br>
             <div class="card-grid">
                 <div class="card">
                     <h3>Upcoming Events</h3>
@@ -83,20 +89,166 @@
 
         <section class="section" id="announcements">
             <h1>Announcements</h1>
+            <p class="dashboard-subtitle">Latest news and announcements.</p>
             <div id="announcements-list"></div>
         </section>
 
         <section class="section" id="schedule">
             <h1>Training Schedule and Event Viewer</h1>
+            <p class="dashboard-subtitle">Check the upcoming events.</p>
             <div id="calendar"></div>
+        </section>
+
+        <section class="section" id="tournaments">
+            <h1>Tournament Registration</h1>
+            <p class="dashboard-subtitle">Select an available tournament to register.</p>
+
+            <div class="card">
+                <h3>Register for Event</h3>
+                <form id="athlete-registration-form">
+
+                    <div class="form-group mb-3">
+                        <label>Select Tournament<span class="required">*</span></label>
+                        <select class="form-control" id="tournament-select" name="tournament_id" required>
+                            <option value="" disabled selected>Loading available tournaments...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" name="age_group" required>
+                                <option value="example1">Example 1</option>
+                                <option value="example2">Example 2</option>
+                                <option value="Open">Open Category</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select class="form-control" name="gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <!-- Example data! Consult Nicholas or stakeholder for proper data -->
+                        <div class="form-group full-width">
+                            <label>Select Events (Hold Ctrl to select multiple)</label>
+                            <select class="form-control" name="events" multiple required style="height: 120px;">
+                                <option value="50m Freestyle">50m Freestyle</option>
+                                <option value="100m Freestyle">100m Freestyle</option>
+                                <option value="50m Breaststroke">50m Breaststroke</option>
+                                <option value="100m Backstroke">100m Backstroke</option>
+                                <option value="200m Medley">200m Medley</option>
+                                <option value="4x100m Relay">4x100m Relay</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="mt-3">Submit Registration</button>
+                </form>
+            </div>
+
+            <div class="card recent-card">
+                <h3>My Registration History</h3>
+                <ul id="my-history-list" class="recent-list">
+                    <li>Loading history...</li>
+                </ul>
+            </div>
         </section>
 
         <!--profile page-->
         <section class="section" id="profile">
             <h1>Profile</h1>
+            <p class="dashboard-subtitle">Edit your profile information.</p><br>
 
-            <!-- data will be fetched from db chack profile.js in assets for working-->
-            <div class="card" id="profile-card"></div>
+            <div class="profile-grid">
+                <div class="card profile-left">
+
+                    <div class="card-header">
+                        <h3 class="mb-0">Profile</h3>
+                    </div>
+
+                    <img id="profile-img" class="profile-image-lg">
+
+                    <p class="mt-4 mb-2 upload-label">Upload New Profile Picture:</p>
+
+                    <form id="profile-pic-form" enctype="multipart/form-data" class="upload-form">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <input type="file" id="profile_pic" name="profile_pic" class="form-control w-75"
+                                accept="image/*" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success upload-btn">
+                            Upload Picture
+                        </button>
+                    </form>
+
+                    <p id="pic-message" class="status-msg"></p>
+
+                    <!-- data will be fetched from db check profile.js in assets for working-->
+                    <div id="profile-card"></div>
+
+                    <div class="profile-settings-group">
+
+                        <div class="setting-row">
+                            <span class="setting-label">Two-Factor Authentication</span>
+                            <label class="switch">
+                                <input type="checkbox" id="twofa-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-row">
+                            <span class="setting-label">Notifications</span>
+                            <label class="switch">
+                                <input type="checkbox" id="notifications-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <div class="card mb-4">
+                        <h3>Update Profile Information</h3>
+
+                        <form id="update-profile-form">
+                            <label>Name</label>
+                            <input type="text" id="name" name="name" required>
+
+                            <label>Email</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <button type="submit">Update Profile</button>
+                        </form>
+
+                        <p id="profile-message"></p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Change Password</h3>
+
+                        <form id="password-form">
+                            <label>Current Password</label>
+                            <input type="password" id="current_password" required>
+
+                            <label>New Password</label>
+                            <input type="password" id="new_password" required>
+
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirm_password" required>
+
+                            <button type="submit">Change Password</button>
+                        </form>
+
+                        <p id="password-message"></p>
+                    </div>
+
+                </div>
+
+            </div>
         </section>
     </main>
 
@@ -106,6 +258,8 @@
     <script src="/assets/sidebar.js"></script>
     <script src="/assets/profile.js"></script>
     <script src="/assets/announcements.js"></script>
+    <script src="/assets/tournaments.js"></script>
+
 </body>
 
 </html>
