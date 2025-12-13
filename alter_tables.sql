@@ -1,46 +1,12 @@
--- SQL Script to Alter Existing Tables for 2FA and Forgot Password Features
--- Run this script after ensuring users and login_logs tables exist
-
 USE aquautm;
 
--- Alter users table to add 2FA enabled column
-ALTER TABLE users ADD COLUMN twofa_enabled BOOLEAN DEFAULT FALSE;
+-- Add missing columns to users table
+ALTER TABLE users
+ADD COLUMN role ENUM('admin', 'member', 'athlete', 'guest') DEFAULT 'member' AFTER password,
+ADD COLUMN profile_pic VARCHAR(255) DEFAULT '/images/default-profile.png' AFTER role,
+ADD COLUMN notifications_enabled BOOLEAN DEFAULT TRUE AFTER profile_pic;
 
--- Alter users table to add role column
-ALTER TABLE users ADD COLUMN role ENUM('admin', 'athlete', 'member') DEFAULT 'member';
-
--- Create verification_codes table for 2FA
-CREATE TABLE IF NOT EXISTS verification_codes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    code VARCHAR(6) NOT NULL,
-    expires_at TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- Create password_resets table (if not already exists)
-CREATE TABLE IF NOT EXISTS password_resets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    token VARCHAR(255) UNIQUE NOT NULL,
-    expires_at TIMESTAMP NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE announcements (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  content TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  created_by INT,
-  FOREIGN KEY (created_by) REFERENCES users(id)
-);
-
-
-ALTER TABLE announcements 
-ADD COLUMN target_role ENUM('member', 'athlete', 'all') NOT NULL DEFAULT 'all';
-
+-- Update existing users to have default role if not set
+UPDATE users SET role = 'member' WHERE role IS NULL OR role = '';
+UPDATE users SET profile_pic = '/images/default-profile.png' WHERE profile_pic IS NULL OR profile_pic = '';
+UPDATE users SET notifications_enabled = TRUE WHERE notifications_enabled IS NULL;

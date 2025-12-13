@@ -99,6 +99,25 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         },
 
+        dateClick: function (info) {
+            // Reset the form for new event
+            form.reset();
+            idInput.value = '';
+
+            // Set the start date to the clicked date at 00:00
+            startInput.value = info.dateStr + 'T00:00';
+
+            // Scroll to the form
+            form.scrollIntoView({ behavior: 'smooth' });
+
+            // Focus on the title input
+            titleInput.focus();
+
+            // Ensure buttons are in add mode
+            saveBtn.innerText = "Add Event";
+            cancelBtn.style.display = "none";
+        },
+
         eventDidMount: function (info) {
             // Optional: visual cue
             info.el.style.cursor = 'pointer';

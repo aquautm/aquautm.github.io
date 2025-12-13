@@ -1,6 +1,24 @@
-# TODO: Enable 2FA for All Users on Login
+# TODO: Add Class Schedule Feature
 
-- [x] Modify routes/auth.js to always require 2FA on login (remove twofa_enabled check)
-- [x] Create sql script/enable_2fa_all_users.sql to set twofa_enabled=TRUE for all users
-- [x] Execute the SQL script to update the database
-- [x ] Test login functionality to confirm 2FA is always required
+## Database Changes
+- [ ] Alter schedules table to add new columns: type ENUM('event', 'class') DEFAULT 'event', instructor VARCHAR(255), location VARCHAR(255), description TEXT.
+
+## Backend Updates
+- [ ] Update app.js GET /api/events to include new fields in SELECT and response.
+- [ ] Update app.js POST /api/events to handle new fields in INSERT.
+- [ ] Update app.js PUT /api/events to handle new fields in UPDATE.
+
+## Frontend Admin Updates
+- [ ] Update admin-dashboard.html: Add type select in "Add New Event" form.
+- [ ] Add conditional fields for instructor, location, description when type='class'.
+
+## Calendar JS Updates
+- [ ] Update calendar.js: Add variables for new input fields.
+- [ ] Handle new fields in form submission.
+- [ ] Populate new fields on edit.
+- [ ] Display additional details in event modal for classes.
+
+## Testing
+- [ ] Test creating a class in admin dashboard.
+- [ ] Verify class appears in athlete schedule with details.
+- [ ] Test editing and deleting classes.

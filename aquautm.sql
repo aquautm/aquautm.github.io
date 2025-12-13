@@ -8,9 +8,12 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'member', 'athlete', 'guest') DEFAULT 'member',
+    profile_pic VARCHAR(255) DEFAULT '/images/default-profile.png',
+    notifications_enabled BOOLEAN DEFAULT TRUE,
     twofa_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    
+
 );
 
 -- Create login_logs table
