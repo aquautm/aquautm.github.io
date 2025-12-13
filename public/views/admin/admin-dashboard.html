@@ -203,6 +203,32 @@
             <p class="dashboard-subtitle">View, edit, and manage users.</p>
 
             <div class="card">
+                <h3>Create Athlete Account</h3>
+                <form id="create-athlete-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>First Name*</label>
+                            <input type="text" class="form-control" name="first_name" id="athlete_first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name*</label>
+                            <input type="text" class="form-control" name="last_name" id="athlete_last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email*</label>
+                            <input type="email" class="form-control" name="email" id="athlete_email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password*</label>
+                            <input type="password" class="form-control" name="password" id="athlete_password" required>
+                        </div>
+                    </div>
+                    <button type="submit" id="create-athlete-btn">Create Athlete Account</button>
+                </form>
+                <p id="create-athlete-message" class="status-msg"></p>
+            </div>
+
+            <div class="card">
                 <div class="members-toolbar">
                     <div class="search-box">
                         <span class="material-symbols-rounded search-icon">search</span>

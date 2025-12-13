@@ -31,25 +31,6 @@ function isAuthenticated(req, res, next) {
   return res.status(401).json({ error: 'Please log in to view events' });
 }
 
-app.post('/api/events', isAuthenticated, async (req, res) => {
-  if (req.session.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Unauthorized' });
-  }
-
-  const { title, start_date, end_date, event_role } = req.body;
-
-  const finalEndDate = end_date ? end_date : null;
-
-  try {
-    const query = 'INSERT INTO schedules (title, start_date, end_date, target_role) VALUES (?, ?, ?, ?)';
-    await db.promise().query(query, [title, start_date, finalEndDate, event_role]);
-    res.json({ success: true, message: 'Event added successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
 app.get('/api/events', isAuthenticated, async (req, res) => {
   const userRole = req.session.user.role;
   let query = '';
@@ -253,6 +234,96 @@ app.get('/api/dashboard/recent-logs', isAuthenticated, async (req, res) => {
     res.json(results);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.post('/api/admin/create-athlete', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  const { first_name, last_name, email, password } = req.body;
+
+  try {
+    // Check if email already exists
+    const [existingUser] = await db.promise().query('SELECT id FROM users WHERE email = ?', [email]);
+    if (existingUser.length > 0) {
+      return res.status(400).json({ success: false, message: 'Email already exists.' });
+    }
+
+    // Hash password
+    const bcrypt = require('bcrypt');
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new athlete
+    const query = 'INSERT INTO users (first_name, last_name, email, password, role, twofa_enabled, created_at) VALUES (?, ?, ?, ?, ?, 1, NOW())';
+    await db.promise().query(query, [first_name, last_name, email, hashedPassword, 'athlete']);
+
+    console.log(`✅ Athlete account created: ${email}`);
+    res.json({ success: true, message: 'Athlete account created successfully!' });
+
+  } catch (err) {
+    console.error('Error creating athlete:', err);
+    res.status(500).json({ success: false, message: 'Error creating athlete account.' });
+  }
+});
+
+app.get('/api/admin/members', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const query = 'SELECT id, first_name, last_name, email, role, created_at FROM users ORDER BY created_at DESC';
+    const [results] = await db.promise().query(query);
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching members:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.put('/api/admin/members/:id/role', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  const { id } = req.params;
+  const { role } = req.body;
+
+  if (!['admin', 'athlete', 'member'].includes(role)) {
+    return res.status(400).json({ error: 'Invalid role' });
+  }
+
+  try {
+    const query = 'UPDATE users SET role = ? WHERE id = ?';
+    await db.promise().query(query, [role, id]);
+    res.json({ success: true, message: 'Role updated successfully' });
+  } catch (err) {
+    console.error('Error updating role:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.delete('/api/admin/members/:id', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  const { id } = req.params;
+
+  try {
+    // Prevent deleting the current admin user
+    if (parseInt(id) === req.session.user.id) {
+      return res.status(400).json({ error: 'Cannot delete your own account' });
+    }
+
+    const query = 'DELETE FROM users WHERE id = ?';
+    await db.promise().query(query, [id]);
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });

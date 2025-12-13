@@ -155,3 +155,217 @@ function loadRecentLogs() {
             document.getElementById('recent-logs').innerHTML = '<li>Error loading activity.</li>';
         });
 }
+
+function handleCreateAthlete(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+
+    fetch('/api/admin/create-athlete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        const messageEl = document.getElementById('create-athlete-message');
+        if (result.success) {
+            messageEl.style.color = 'green';
+            messageEl.textContent = result.message;
+            event.target.reset(); // Clear the form
+        } else {
+            messageEl.style.color = 'red';
+            messageEl.textContent = result.message;
+        }
+    })
+    .catch(err => {
+        console.error("Error creating athlete:", err);
+        document.getElementById('create-athlete-message').style.color = 'red';
+        document.getElementById('create-athlete-message').textContent = 'Error creating athlete account.';
+    });
+}
+
+function loadMembers() {
+    fetch('/api/admin/members')
+        .then(res => res.json())
+        .then(members => {
+            const tbody = document.getElementById('members-list');
+            if (!tbody) return;
+
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No members found.</td></tr>';
+                return;
+            }
+
+            let html = '';
+            members.forEach(member => {
+                const roleClass = `role-${member.role}`;
+                const fullName = `${member.first_name} ${member.last_name}`;
+                const joinDate = new Date(member.created_at).toLocaleDateString();
+
+                html += `
+                    <tr data-member-id="${member.id}">
+                        <td>
+                            <div class="user-info">
+                                <img src="/images/default-profile.png" alt="User" class="table-avatar">
+                                <span class="user-name">${fullName}</span>
+                            </div>
+                        </td>
+                        <td>${member.email}</td>
+                        <td>
+                            <span class="role-badge role-${member.role}">${member.role.charAt(0).toUpperCase() + member.role.slice(1)}</span>
+                        </td>
+                        <td><span class="status-dot active"></span> Active</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon delete" title="Remove User" data-user-id="${member.id}">
+                                    <span class="material-symbols-rounded">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            // Add event listeners for role changes and delete buttons
+            setupMemberActions();
+        })
+        .catch(err => {
+            console.error("Error loading members:", err);
+            const tbody = document.getElementById('members-list');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="5">Error loading members.</td></tr>';
+            }
+        });
+}
+
+function setupMemberFilters() {
+    const searchInput = document.getElementById('member-search');
+    const roleFilter = document.getElementById('role-filter');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterMembers);
+    }
+    if (roleFilter) {
+        roleFilter.addEventListener('change', filterMembers);
+    }
+}
+
+function filterMembers() {
+    const searchTerm = document.getElementById('member-search')?.value.toLowerCase() || '';
+    const roleFilter = document.getElementById('role-filter')?.value || 'all';
+    const rows = document.querySelectorAll('#members-list tr');
+
+    rows.forEach(row => {
+        if (row.cells.length < 5) return; // Skip if not a data row
+
+        const name = row.cells[0].textContent.toLowerCase();
+        const email = row.cells[1].textContent.toLowerCase();
+        const roleBadge = row.cells[2].querySelector('.role-badge');
+        const role = roleBadge ? roleBadge.textContent.toLowerCase() : '';
+
+        const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+        const matchesRole = roleFilter === 'all' || role === roleFilter.toLowerCase();
+
+        row.style.display = matchesSearch && matchesRole ? '' : 'none';
+    });
+}
+
+function setupMemberActions() {
+    // Role change handlers
+    document.querySelectorAll('.role-select').forEach(select => {
+        select.addEventListener('change', function() {
+            const userId = this.dataset.userId;
+            const saveBtn = document.querySelector(`.save-role[data-user-id="${userId}"]`);
+            if (saveBtn) {
+                saveBtn.style.display = 'inline-block';
+            }
+        });
+    });
+
+    // Save role changes
+    document.querySelectorAll('.save-role').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const select = document.querySelector(`.role-select[data-user-id="${userId}"]`);
+            const newRole = select.value;
+
+            fetch(`/api/admin/members/${userId}/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ role: newRole })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    this.style.display = 'none';
+                    alert('Role updated successfully!');
+                } else {
+                    alert('Error updating role: ' + result.error);
+                }
+            })
+            .catch(err => {
+                console.error("Error updating role:", err);
+                alert('Error updating role.');
+            });
+        });
+    });
+
+    // Delete user handlers
+    document.querySelectorAll('.delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const row = this.closest('tr');
+            const userName = row.cells[0].textContent.trim();
+
+            if (confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+                fetch(`/api/admin/members/${userId}`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        row.remove();
+                        alert('User deleted successfully!');
+                    } else {
+                        alert('Error deleting user: ' + result.error);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error deleting user:", err);
+                    alert('Error deleting user.');
+                });
+            }
+        });
+    });
+}
+
+// Add event listener for the create athlete form
+document.addEventListener("DOMContentLoaded", () => {
+    const createAthleteForm = document.getElementById('create-athlete-form');
+    if (createAthleteForm) {
+        createAthleteForm.addEventListener('submit', handleCreateAthlete);
+    }
+
+    // Load members when members section becomes active
+    const membersSection = document.getElementById('members');
+    if (membersSection) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (membersSection.classList.contains('active')) {
+                        loadMembers();
+                        setupMemberFilters();
+                    }
+                }
+            });
+        });
+        observer.observe(membersSection, { attributes: true });
+    }
+});
