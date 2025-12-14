@@ -44,3 +44,20 @@ CREATE TABLE announcements (
 ALTER TABLE announcements 
 ADD COLUMN target_role ENUM('member', 'athlete', 'all') NOT NULL DEFAULT 'all';
 
+
+
+ALTER TABLE tournament_registrations
+ADD COLUMN contact_name VARCHAR(100) NOT NULL,
+ADD COLUMN contact_phone VARCHAR(20) NOT NULL,
+ADD COLUMN contact_email VARCHAR(100);
+
+ALTER TABLE registration_events
+ADD COLUMN seed_time VARCHAR(20);
+
+
+ALTER TABLE tournament_registrations
+DROP COLUMN status;
+
+ALTER TABLE tournament_registrations
+MODIFY gender VARCHAR(10) NOT NULL;
+
