@@ -26,14 +26,6 @@ document.querySelectorAll(".menu-link").forEach(link => {
             if (sectionId === "schedule" && window.calendar) {
                 setTimeout(() => window.calendar.updateSize(), 100);
             }
-            if (sectionId === "tournaments") {
-                window.loadTournaments();
-                window.loadTournamentsDropdown();
-                window.loadMyRegistrationHistory();
-                window.loadAdminRegistrations();
-            }
-
-
         }
     });
 });

@@ -382,19 +382,11 @@ const pagesRouter = require("./routes/pages");
 const authRouter = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const announcementRoutes = require("./routes/announcements");
-const tournamentRoutes = require("./routes/tournaments");
 
 app.use(announcementRoutes);
+app.use("/", profileRoutes);
 app.use("/", pagesRouter);
 app.use("/", authRouter);
-app.use("/", pagesRouter);
-app.use("/", authRouter);
-app.use("/profile", profileRoutes);
-
-
-app.use("/api/tournaments", tournamentRoutes);
-
-
 
 // Start server
 const port = process.env.PORT || 5000;

@@ -117,7 +117,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="form-control" name="category" required>
+                            <select class="form-control" name="age_group" required>
                                 <option value="example1">Example 1</option>
                                 <option value="example2">Example 2</option>
                                 <option value="Open">Open Category</option>
@@ -133,10 +133,9 @@
                         </div>
 
                         <!-- Example data! Consult Nicholas or stakeholder for proper data -->
-
                         <div class="form-group full-width">
                             <label>Select Events (Hold Ctrl to select multiple)</label>
-                            <select class="form-control" name="event_name" multiple required style="height: 120px;">
+                            <select class="form-control" name="events" multiple required style="height: 120px;">
                                 <option value="50m Freestyle">50m Freestyle</option>
                                 <option value="100m Freestyle">100m Freestyle</option>
                                 <option value="50m Breaststroke">50m Breaststroke</option>
@@ -144,63 +143,8 @@
                                 <option value="200m Medley">200m Medley</option>
                                 <option value="4x100m Relay">4x100m Relay</option>
                             </select>
-                        </div> 
-                        
-                    </div> 
-                    
-                   <div class="form-group">
-    <label>Contact Email<span class="required">*</span></label>
-    <input
-        type="email"
-        class="form-control"
-        name="contact_email"
-        placeholder="e.g. athlete@email.com"
-        required
-    >
-</div>
-
-<div class="form-group">
-    <label>Contact Phone Number<span class="required">*</span></label>
-    <input
-        type="tel"
-        class="form-control"
-        name="contact_phone"
-        placeholder="e.g. +60123456789"
-        required
-        pattern="^[0-9+\s()-]{7,20}$"
-        title="Enter a valid phone number"
-    >
-</div>
-<div class="form-group">
-    <label>Full Name<span class="required">*</span></label>
-    <input
-        type="text"
-        class="form-control"
-        name="contact_name"
-        placeholder="e.g. Rahul Kumar"
-        required
-        minlength="2"
-    >
-</div>
-
-
-                    <div class="form-group full-width">
-    <label>Seed Time (Personal Best) <span class="required">*</span></label>
-    <input
-        type="text"
-        class="form-control"
-        name="seed_time"
-        placeholder="e.g. 00:58.12"
-        required
-        pattern="^([0-9]+):([0-5][0-9])\.([0-9]{2})$"
-        title="Enter time as M:SS.xx or MM:SS.xx (e.g. 0:58.12 or 1:02.45)"
-    >
-    <small class="form-text">
-    Format: minutes:seconds.hundredths (example: 1:02.45)
-    </small>
-</div>
-
-                    
+                        </div>
+                    </div>
 
                     <button type="submit" class="mt-3">Submit Registration</button>
                 </form>

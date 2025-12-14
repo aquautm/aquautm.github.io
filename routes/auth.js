@@ -19,15 +19,8 @@ const transporter = nodemailer.createTransport({
 });
 
 // Signup route
-
-
 router.post("/signup", async (req, res) => {
-  console.log("REQ.BODY:", req.body);
-  const { firstName, lastName, email, password, confirmPassword, role} = req.body;
-   
-  if (!role) {
-    return res.status(400).send("Role is required. Please select a user type.");
-  }
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
     return res.status(400).json({ success: false, message: "Passwords do not match." });

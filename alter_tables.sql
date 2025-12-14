@@ -11,23 +11,6 @@ UPDATE users SET role = 'member' WHERE role IS NULL OR role = '';
 UPDATE users SET profile_pic = '/images/default-profile.png' WHERE profile_pic IS NULL OR profile_pic = '';
 UPDATE users SET notifications_enabled = TRUE WHERE notifications_enabled IS NULL;
 
-
-
-ALTER TABLE tournament_registrations
-ADD COLUMN contact_name VARCHAR(100) NOT NULL,
-ADD COLUMN contact_phone VARCHAR(20) NOT NULL,
-ADD COLUMN contact_email VARCHAR(100);
-
-ALTER TABLE registration_events
-ADD COLUMN seed_time VARCHAR(20);
-
-
-ALTER TABLE tournament_registrations
-DROP COLUMN status;
-
-ALTER TABLE tournament_registrations
-MODIFY gender VARCHAR(10) NOT NULL;
-
 -- Add class-specific columns to schedules table
 ALTER TABLE schedules
 ADD COLUMN type ENUM('event', 'class') DEFAULT 'event',
