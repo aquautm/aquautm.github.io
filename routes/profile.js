@@ -9,7 +9,7 @@ const fs = require("fs");
 // Configure multer for profile picture uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, "../public/uploads");
+    const uploadDir = path.join(__dirname, "../uploads");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -153,7 +153,7 @@ router.post("/picture", upload.single("profile_pic"), async (req, res) => {
     );
 
     if (rows.length > 0 && rows[0].profile_pic && rows[0].profile_pic !== "/images/default-profile.png") {
-      const oldPath = path.join(__dirname, "../public", rows[0].profile_pic);
+      const oldPath = path.join(__dirname, "..", rows[0].profile_pic.slice(1));
       if (fs.existsSync(oldPath)) {
         fs.unlinkSync(oldPath);
       }
