@@ -8,267 +8,6 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="/assets/style.css" rel="stylesheet">
-    <style>
-        .chat-window {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .chat-messages {
-            height: 500px;
-            overflow-y: auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 18px;
-            max-width: 70%;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .message.bot {
-            background: #007bff;
-            color: white;
-            margin-right: auto;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.user {
-            background: #e3f2fd;
-            color: #1565c0;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
-        }
-
-        .chat-input-area {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .chat-input-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .chat-input:focus {
-            border-color: #007bff;
-        }
-
-        .send-button {
-            padding: 12px 24px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        .send-button:hover {
-            background: #0056b3;
-        }
-
-        .send-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .quick-questions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .quick-question {
-            padding: 8px 16px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .quick-question:hover {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        .typing-indicator {
-            display: none;
-            padding: 12px 16px;
-            background: #007bff;
-            color: white;
-            border-radius: 18px;
-            margin-right: auto;
-            max-width: 70%;
-            border-bottom-left-radius: 4px;
-        }
-
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: white;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        @media (max-width: 768px) {
-            .message {
-                max-width: 85%;
-            }
-
-            .chat-messages {
-                height: 400px;
-            }
-        }
-
-        /* Floating Chatbot Widget Styles */
-        .chatbot-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 60px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .chatbot-widget.minimized {
-            height: 60px;
-        }
-
-        .chatbot-widget.expanded {
-            height: 600px;
-        }
-
-        .chatbot-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            background: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .chatbot-title {
-            font-weight: 500;
-        }
-
-        .chatbot-toggle, .chatbot-close {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
-
-        .chatbot-toggle:hover, .chatbot-close:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .chatbot-body {
-            display: none;
-            height: calc(100% - 60px);
-            flex-direction: column;
-        }
-
-        .chatbot-widget.expanded .chatbot-body {
-            display: flex;
-        }
-
-        .chatbot-body .chat-messages {
-            flex: 1;
-            height: auto;
-            padding: 15px;
-        }
-
-        .chatbot-body .chat-input-area {
-            padding: 15px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .chatbot-body .quick-questions {
-            margin-bottom: 10px;
-        }
-
-        .chatbot-body .quick-question {
-            font-size: 12px;
-            padding: 6px 12px;
-        }
-
-        .chatbot-body .chat-input-container {
-            gap: 8px;
-        }
-
-        .chatbot-body .chat-input {
-            font-size: 14px;
-            padding: 10px 14px;
-        }
-
-        .chatbot-body .send-button {
-            padding: 10px 18px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .chatbot-widget {
-                width: calc(100vw - 40px);
-                right: 20px;
-                bottom: 20px;
-            }
-
-            .chatbot-widget.expanded {
-                height: 500px;
-            }
-        }
-    </style>
 </head>
 
 <body class="body-dashboard">
@@ -304,12 +43,6 @@
                     <a href="#" class="menu-link">
                         <span class="menu-icon material-symbols-rounded">emoji_events</span>
                         <span class="menu-label">Tournaments</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <span class="menu-icon material-symbols-rounded">chat</span>
-                        <span class="menu-label">Chatbot</span>
                     </a>
                 </li>
             </ul>
@@ -411,63 +144,37 @@
                                 <option value="200m Medley">200m Medley</option>
                                 <option value="4x100m Relay">4x100m Relay</option>
                             </select>
-                        </div> 
-                        
-                    </div> 
-                    
-                   <div class="form-group">
-    <label>Contact Email<span class="required">*</span></label>
-    <input
-        type="email"
-        class="form-control"
-        name="contact_email"
-        placeholder="e.g. athlete@email.com"
-        required
-    >
-</div>
+                        </div>
 
-<div class="form-group">
-    <label>Contact Phone Number<span class="required">*</span></label>
-    <input
-        type="tel"
-        class="form-control"
-        name="contact_phone"
-        placeholder="e.g. +60123456789"
-        required
-        pattern="^[0-9+\s()-]{7,20}$"
-        title="Enter a valid phone number"
-    >
-</div>
-<div class="form-group">
-    <label>Full Name<span class="required">*</span></label>
-    <input
-        type="text"
-        class="form-control"
-        name="contact_name"
-        placeholder="e.g. Rahul Kumar"
-        required
-        minlength="2"
-    >
-</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Email<span class="required">*</span></label>
+                        <input type="email" class="form-control" name="contact_email"
+                            placeholder="e.g. athlete@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Phone Number<span class="required">*</span></label>
+                        <input type="tel" class="form-control" name="contact_phone" placeholder="e.g. +60123456789"
+                            required pattern="^[0-9+\s()-]{7,20}$" title="Enter a valid phone number">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name<span class="required">*</span></label>
+                        <input type="text" class="form-control" name="contact_name" placeholder="e.g. Rahul Kumar"
+                            required minlength="2">
+                    </div>
 
 
                     <div class="form-group full-width">
-    <label>Seed Time (Personal Best) <span class="required">*</span></label>
-    <input
-        type="text"
-        class="form-control"
-        name="seed_time"
-        placeholder="e.g. 00:58.12"
-        required
-        pattern="^([0-9]+):([0-5][0-9])\.([0-9]{2})$"
-        title="Enter time as M:SS.xx or MM:SS.xx (e.g. 0:58.12 or 1:02.45)"
-    >
-    <small class="form-text">
-    Format: minutes:seconds.hundredths (example: 1:02.45)
-    </small>
-</div>
-
-                    
+                        <label>Seed Time (Personal Best) <span class="required">*</span></label>
+                        <input type="text" class="form-control" name="seed_time" placeholder="e.g. 00:58.12" required
+                            pattern="^([0-9]+):([0-5][0-9])\.([0-9]{2})$"
+                            title="Enter time as M:SS.xx or MM:SS.xx (e.g. 0:58.12 or 1:02.45)">
+                        <small class="form-text">
+                            Format: minutes:seconds.hundredths (example: 1:02.45)
+                        </small>
+                    </div>
 
                     <button type="submit" class="mt-3">Submit Registration</button>
                 </form>
@@ -480,8 +187,6 @@
                 </ul>
             </div>
         </section>
-
-
 
         <!--profile page-->
         <section class="section" id="profile">
@@ -600,7 +305,8 @@
         <div class="chatbot-body">
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    Hello! I'm your AquaUTM assistant. I can help you learn about our swimming pool management system. What would you like to know?
+                    Hello! I'm your AquaUTM assistant. I can help you learn about our swimming pool management system.
+                    What would you like to know?
                 </div>
             </div>
             <div class="chat-input-area">
@@ -608,11 +314,14 @@
                     <button class="quick-question" onclick="askQuestion('What is AquaUTM?')">What is AquaUTM?</button>
                     <button class="quick-question" onclick="askQuestion('How do I login?')">How do I login?</button>
                     <button class="quick-question" onclick="askQuestion('What are the user roles?')">User roles</button>
-                    <button class="quick-question" onclick="askQuestion('How do I register for tournaments?')">Tournaments</button>
-                    <button class="quick-question" onclick="askQuestion('How do I update my profile?')">Profile settings</button>
+                    <button class="quick-question"
+                        onclick="askQuestion('How do I register for tournaments?')">Tournaments</button>
+                    <button class="quick-question" onclick="askQuestion('How do I update my profile?')">Profile
+                        settings</button>
                 </div>
                 <div class="chat-input-container">
-                    <input type="text" id="chatInput" class="chat-input" placeholder="Ask me about AquaUTM..." onkeypress="handleKeyPress(event)">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Ask me about AquaUTM..."
+                        onkeypress="handleKeyPress(event)">
                     <button id="sendButton" class="send-button" onclick="sendMessage()">Send</button>
                 </div>
             </div>

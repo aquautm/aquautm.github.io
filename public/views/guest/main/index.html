@@ -8,6 +8,8 @@
   <link href="assets/style.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body class="body-a homepage">
@@ -65,24 +67,28 @@
   </section>
 
   <!-- About Section -->
-<section class="about-section">
-  <h2>About AquaUTM</h2>
-  <div class="about-container">
-    <img src="images/clubintro.jpg" alt="AquaUTM Pool View" class="about-image">
-    <div class="about-text">
-      <p>
-        The UTM Swimming Pool was completed in 2011 and officially began operating in 2012. 
-        It features two pools with different depths — 1.35 meters and 5 meters — catering to both beginners and professional swimmers. 
-        The facility also includes a grandstand area that can accommodate up to 1,000 spectators, making it an ideal venue for various aquatic events and activities.
-      </p>
-      <p>
-        A wide range of programs can be held at the UTM Swimming Pool, including scuba diving license training, dinner events, seminars, swimming competitions, 
-        aqua Zumba sessions, and more. With its excellent facilities and vibrant atmosphere, the UTM Swimming Pool continues to serve as a hub for water sports 
-        and community engagement at Universiti Teknologi Malaysia
-      </p>
+  <section class="about-section">
+    <h2>About AquaUTM</h2>
+    <div class="about-container">
+      <img src="images/clubintro.jpg" alt="AquaUTM Pool View" class="about-image">
+      <div class="about-text">
+        <p>
+          The UTM Swimming Pool was completed in 2011 and officially began operating in 2012.
+          It features two pools with different depths — 1.35 meters and 5 meters — catering to both beginners and
+          professional swimmers.
+          The facility also includes a grandstand area that can accommodate up to 1,000 spectators, making it an ideal
+          venue for various aquatic events and activities.
+        </p>
+        <p>
+          A wide range of programs can be held at the UTM Swimming Pool, including scuba diving license training, dinner
+          events, seminars, swimming competitions,
+          aqua Zumba sessions, and more. With its excellent facilities and vibrant atmosphere, the UTM Swimming Pool
+          continues to serve as a hub for water sports
+          and community engagement at Universiti Teknologi Malaysia
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <footer class="footer">
     <div class="footer-container">
@@ -113,8 +119,49 @@
     </div>
   </footer>
 
+  <div id="chatbot-widget" class="chatbot-widget minimized">
+    <div class="chatbot-header">
+      <span class="chatbot-title">AI Assistant</span>
+      <button id="chatbot-toggle" class="chatbot-toggle">
+        <span class="material-symbols-rounded">chat</span>
+      </button>
+      <button id="chatbot-close" class="chatbot-close">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div class="chatbot-body">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+          Hello! I'm your AquaUTM assistant. I can help you learn about our swimming pool management system.
+          What would you like to know?
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="quick-questions" id="quickQuestions">
+          <button class="quick-question" onclick="askQuestion('What is AquaUTM?')">What is AquaUTM?</button>
+          <button class="quick-question" onclick="askQuestion('How do I login?')">How do I login?</button>
+          <button class="quick-question" onclick="askQuestion('What are the user roles?')">User roles</button>
+          <button class="quick-question"
+            onclick="askQuestion('How do I register for tournaments?')">Tournaments</button>
+          <button class="quick-question" onclick="askQuestion('How do I update my profile?')">Profile
+            settings</button>
+        </div>
+        <div class="chat-input-container">
+          <input type="text" id="chatInput" class="chat-input" placeholder="Ask me about AquaUTM..."
+            onkeypress="handleKeyPress(event)">
+          <button id="sendButton" class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+      <div class="typing-indicator" id="typingIndicator">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <script src="/assets/slider.js"></script>
+  <script src="/assets/chatbot.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </body>
 

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Event listeners for toggle and close
     chatbotToggle.addEventListener('click', toggleChatbot);
     chatbotClose.addEventListener('click', closeChatbot);
-    chatbotHeader.addEventListener('click', toggleChatbot);
+    document.getElementById("chatbot-toggle").addEventListener("click", toggleChatbot);
 
     // Send message on button click
     sendButton.addEventListener('click', sendMessage);
