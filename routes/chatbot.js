@@ -173,7 +173,12 @@ router.post('/message', (req, res) => {
   }
 
   const response = generateResponse(message.trim());
-  res.json({ response });
+
+  // Add a delay of 2-3 seconds before responding
+  const delay = Math.random() * 1000 + 2000; // Random delay between 2000ms and 3000ms
+  setTimeout(() => {
+    res.json({ response });
+  }, delay);
 });
 
 module.exports = router;
