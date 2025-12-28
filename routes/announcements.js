@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("../db");
+const { sendMail } = require("../utils/mailer");
 
 const router = express.Router();
 
@@ -19,6 +20,31 @@ router.post("/announcements/create", async (req, res) => {
       `INSERT INTO announcements (title, content, image_path, link, target_role, created_by)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [title, content, image_path, link, safeTargetRole, req.session.user.id] // <--- FIXED: user.id
+    );
+    // 2️⃣ Decide who should receive emails
+    let userQuery = `SELECT email FROM users WHERE email IS NOT NULL`;
+    let params = [];
+
+    if (safeTargetRole !== "all") {
+      userQuery += ` AND role = ?`;
+      params.push(safeTargetRole);
+    }
+
+    const [users] = await db.promise().query(userQuery, params);
+
+    // 3️⃣ Send emails
+    await Promise.all(
+      users.map(user =>
+        sendMail(
+          user.email,
+          "📢 New Announcement",
+          `
+            <h2>${title}</h2>
+            <p>${content}</p>
+            ${link ? `<p><a href="${link}">Read more</a></p>` : ""}
+          `
+        )
+      )
     );
 
     res.redirect("/admin-dashboard");
@@ -81,10 +107,11 @@ router.put("/announcements/:id", async (req, res) => {
   const { title, content, image_path, link, target_role } = req.body;
 
   const safeTargetRole = ["member", "athlete", "all"].includes(target_role)
-  ? target_role
-  : "all";
+    ? target_role
+    : "all";
 
   try {
+    // 1️⃣ Update announcement
     await db.promise().query(
       `UPDATE announcements 
        SET title = ?, content = ?, image_path = ?, link = ?, target_role = ?
@@ -92,12 +119,52 @@ router.put("/announcements/:id", async (req, res) => {
       [title, content, image_path, link, safeTargetRole, req.params.id]
     );
 
-    res.json({ success: true });
+    // 2️⃣ Select users to notify
+    let userSql = `SELECT email FROM users WHERE email IS NOT NULL AND role = 'athlete'`;
+    const params = [];
+
+    if (safeTargetRole !== "all") {
+      userSql += ` AND role = ?`;
+      params.push(safeTargetRole);
+    }
+
+   
+    
+
+    const [users] = await db.promise().query(userSql, params);
+
+    // 3️⃣ Send update emails
+    try {
+      await Promise.all(
+        users.map(user =>
+          sendMail(
+            user.email,
+            "✏️ Announcement Updated",
+            `
+              <h2>${title}</h2>
+              <p>${content}</p>
+              ${link ? `<p><a href="${link}">Read more</a></p>` : ""}
+              <p><em>This announcement has been updated.</em></p>
+            `
+          )
+        )
+      );
+    } catch (mailErr) {
+      console.error("Email error:", mailErr);
+    }
+
+    // 4️⃣ Respond
+    res.json({
+      success: true,
+      message: "Announcement updated and users notified"
+    });
+
   } catch (err) {
     console.error("Edit error:", err);
     res.status(500).json({ success: false });
   }
 });
+
 
 router.get("/me", (req, res) => {
   if (req.session.user) {

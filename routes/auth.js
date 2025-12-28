@@ -23,13 +23,14 @@ const transporter = nodemailer.createTransport({
 
 router.post("/signup", async (req, res) => {
   console.log("REQ.BODY:", req.body);
-  const { firstName, lastName, email, password, confirmPassword, role} = req.body;
+  const { first_name, last_name, email, password, confirm_Password} = req.body;
+  const role = "member";
    
   if (!role) {
     return res.status(400).send("Role is required. Please select a user type.");
   }
 
-  if (password !== confirmPassword) {
+  if (password !== confirm_Password) {
     return res.status(400).json({ success: false, message: "Passwords do not match." });
   }
 
@@ -43,10 +44,10 @@ router.post("/signup", async (req, res) => {
 
     await db.promise().query(
       "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, 1)",
-      [firstName, lastName, email, hashedPassword]
+      [first_name, last_name, email, hashedPassword]
     );
 
-    console.log("✅ New user registered:", email);
+    
 
     console.log("✅ New user registered:", email);
 

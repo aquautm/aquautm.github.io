@@ -3,6 +3,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const { sendMail } = require("../utils/mailer");
 
 /* Create tournament */
 router.post("/create", (req, res) => {
@@ -19,7 +20,37 @@ router.post("/create", (req, res) => {
 
   db.query(sql, [name, date, venue], err => {
     if (err) return res.json({ success: false, message: err.message });
-    res.json({ success: true });
+    const userSql = `SELECT email FROM users WHERE email IS NOT NULL`;
+
+    db.query(userSql, async (err, users) => {
+      if (err) {
+        console.error("User fetch failed:", err);
+        return res.json({ success: true, message: "Tournament created (no emails sent)" });
+      }
+
+      // 2️⃣ Send emails
+      try {
+        await Promise.all(
+          users.map(user =>
+            sendMail(
+              user.email,
+              "🏆 New Tournament Announcement",
+              `
+                <h2>${name}</h2>
+                <p><strong>Date:</strong> ${date}</p>
+                <p><strong>Venue:</strong> ${venue}</p>
+                <p>Registrations are now open.</p>
+              `
+            )
+          )
+        );
+      } catch (mailErr) {
+        console.error("Email error:", mailErr);
+      }
+
+      // 3️⃣ Final response
+      res.json({ success: true, message: "Tournament created and users notified" });
+    });
   });
 });
 
@@ -40,8 +71,13 @@ router.get("/active", (req, res) => {
 
 /* Update tournament */
 router.put("/:id", (req, res) => {
+  console.log("UPDATE TOURNAMENT ROUTE HIT");
   const { id } = req.params;
   const { name, date, venue } = req.body;
+
+  if (!name || !date || !venue) {
+    return res.json({ success: false, message: "Missing fields" });
+  }
 
   const sql = `
     UPDATE tournaments
@@ -50,10 +86,53 @@ router.put("/:id", (req, res) => {
   `;
 
   db.query(sql, [name, date, venue, id], err => {
-    if (err) return res.json({ success: false });
-    res.json({ success: true });
+    if (err) {
+      return res.json({ success: false, message: err.message });
+    }
+
+    // 🔽 STEP 4: fetch users
+const userSql = `SELECT email FROM users WHERE email IS NOT NULL AND role = 'athlete'`;
+
+
+    db.query(userSql, async (err, users) => {
+      if (err) {
+        console.error("User fetch failed:", err);
+        return res.json({
+          success: true,
+          message: "Tournament updated (no emails sent)"
+        });
+      }
+
+      // 🔽 STEP 5: send emails
+      try {
+        await Promise.all(
+          users.map(user =>
+            sendMail(
+              user.email,
+              "✏️ Tournament Updated",
+              `
+                <h2>${name}</h2>
+                <p><strong>Updated Details:</strong></p>
+                <p>Date: ${date}</p>
+                <p>Venue: ${venue}</p>
+                <p>Please note the changes.</p>
+              `
+            )
+          )
+        );
+      } catch (mailErr) {
+        console.error("Email error:", mailErr);
+      }
+
+      // 🔽 STEP 6: final response
+      res.json({
+        success: true,
+        message: "Tournament updated and users notified"
+      });
+    });
   });
 });
+
 
 /* Delete tournament */
 router.delete("/:id", (req, res) => {
