@@ -380,6 +380,61 @@ app.delete('/api/admin/members/:id', isAuthenticated, async (req, res) => {
   }
 });
 
+app.post('/api/feedback/submit', isAuthenticated, async (req, res) => {
+  const { message } = req.body;
+  
+  const { id, first_name, last_name, role } = req.session.user;
+  const fullName = `${first_name} ${last_name}`;
+
+  if (!message || message.trim() === "") {
+      return res.status(400).json({ error: "Message cannot be empty" });
+  }
+
+  try {
+      const query = 'INSERT INTO feedback (user_id, user_name, role, message) VALUES (?, ?, ?, ?)';
+      await db.promise().query(query, [id, fullName, role, message]);
+      
+      res.json({ success: true, response: "Your feedback has been sent to the admins. Thank you!" });
+  } catch (err) {
+      console.error("Feedback Error:", err);
+      res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/admin/feedback', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+      const query = `
+          SELECT id, user_name, role, message, 
+          DATE_FORMAT(created_at, '%d %b %Y, %h:%i %p') as date 
+          FROM feedback 
+          ORDER BY created_at DESC
+      `;
+      const [results] = await db.promise().query(query);
+      res.json(results);
+  } catch (err) {
+      console.error("Error fetching feedback:", err);
+      res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.delete('/api/admin/feedback/:id', isAuthenticated, async (req, res) => {
+  if (req.session.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+  }
+
+  try {
+      await db.promise().query('DELETE FROM feedback WHERE id = ?', [req.params.id]);
+      res.json({ success: true, message: 'Feedback deleted' });
+  } catch (err) {
+      console.error("Error deleting feedback:", err);
+      res.status(500).json({ error: 'Database error' });
+  }
+});
+
 // Routes
 const pagesRouter = require("./routes/pages");
 const authRouter = require("./routes/auth");

@@ -32,8 +32,11 @@ document.querySelectorAll(".menu-link").forEach(link => {
                 window.loadMyRegistrationHistory();
                 window.loadAdminRegistrations();
             }
-
-
+            if (sectionId === "admin-feedback" || sectionId === "feedback") {
+                if (window.loadFeedback) {
+                    window.loadFeedback();
+                }
+            }
         }
     });
 });

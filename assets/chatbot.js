@@ -4,110 +4,130 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatMessages = document.getElementById('chatMessages');
     const typingIndicator = document.getElementById('typingIndicator');
     const chatbotWidget = document.getElementById('chatbot-widget');
-    const chatbotToggle = document.getElementById('chatbot-toggle');
-    const chatbotClose = document.getElementById('chatbot-close');
-    const chatbotHeader = document.querySelector('.chatbot-header');
+    const suggestionChips = document.getElementById('suggestionChips');
+    
+    const toggleBtns = document.querySelectorAll('.chatbot-toggle');
+    const closeBtn = document.querySelector('.chatbot-close');
 
-    // Toggle chatbot widget
+    let isFeedbackMode = false;
+
     function toggleChatbot() {
         if (chatbotWidget.classList.contains('minimized')) {
             chatbotWidget.classList.remove('minimized');
             chatbotWidget.classList.add('expanded');
-            chatInput.focus();
+            setTimeout(() => chatInput.focus(), 300);
         } else {
             chatbotWidget.classList.remove('expanded');
             chatbotWidget.classList.add('minimized');
         }
     }
 
-    // Close chatbot widget
-    function closeChatbot() {
+    toggleBtns.forEach(btn => btn.addEventListener('click', toggleChatbot));
+    if(closeBtn) closeBtn.addEventListener('click', () => {
         chatbotWidget.classList.remove('expanded');
         chatbotWidget.classList.add('minimized');
-    }
-
-    // Event listeners for toggle and close
-    chatbotToggle.addEventListener('click', toggleChatbot);
-    chatbotClose.addEventListener('click', closeChatbot);
-    document.getElementById("chatbot-toggle").addEventListener("click", toggleChatbot);
-
-    // Send message on button click
-    sendButton.addEventListener('click', sendMessage);
-
-    // Send message on Enter key press
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
     });
 
-    function sendMessage() {
-        const message = chatInput.value.trim();
-        if (!message) return;
+    window.activateFeedbackMode = function() {
+        isFeedbackMode = true;
+        
+        if(suggestionChips) suggestionChips.style.display = 'none';
 
-        // Add user message to chat
-        addMessage(message, 'user');
+        addMessage("Please type your message, issue, or suggestion below. It will be sent directly to the admins.", 'bot');
+        
+        chatInput.placeholder = "Type your feedback here...";
+        chatInput.focus();
+    };
 
-        // Clear input
+    window.askQuestion = function(question) {
+        if(isFeedbackMode) return; 
+        chatInput.value = question;
+        handleMessageFlow();
+    };
+
+    function handleMessageFlow() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        addMessage(text, 'user');
         chatInput.value = '';
 
-        // Show typing indicator
-        showTypingIndicator();
+        hideTypingIndicator();
 
-        // Send message to server
+        if (isFeedbackMode) {
+            submitFeedbackToServer(text);
+        } else {
+            sendMessageToChatbot(text);
+        }
+    }
+
+    sendButton.addEventListener('click', handleMessageFlow);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleMessageFlow();
+    });
+
+    function sendMessageToChatbot(msg) {
         fetch('/api/chatbot/message', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: message })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            // Hide typing indicator
             hideTypingIndicator();
-
-            // Add bot response to chat
-            setTimeout(() => {
-                addMessage(data.response, 'bot');
-            }, 500); // Small delay for natural feel
+            addMessage(data.response, 'bot');
         })
-        .catch(error => {
-            console.error('Error:', error);
+        .catch(err => {
             hideTypingIndicator();
-            addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+            addMessage("Sorry, I'm having trouble connecting.", 'bot');
+        });
+    }
+
+    function submitFeedbackToServer(msg) {
+        fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg })
+        })
+        .then(res => res.json())
+        .then(data => {
+            hideTypingIndicator();
+            
+            addMessage("✅ " + data.response, 'bot');
+            
+            isFeedbackMode = false;
+            chatInput.placeholder = "Ask me about AquaUTM...";
+            
+            if(suggestionChips) suggestionChips.style.display = 'flex';
+            
+            setTimeout(() => {
+                addMessage("How else can I help?", 'bot');
+            }, 1000);
+        })
+        .catch(err => {
+            hideTypingIndicator();
+            addMessage("Error sending feedback. Please try again.", 'bot');
+            isFeedbackMode = false;
+            if(suggestionChips) suggestionChips.style.display = 'flex';
         });
     }
 
     function addMessage(text, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = text;
-        chatMessages.appendChild(messageDiv);
-
-        // Scroll to bottom
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        div.textContent = text;
+        chatMessages.appendChild(div);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function showTypingIndicator() {
-        typingIndicator.style.display = 'block';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if(typingIndicator) {
+            typingIndicator.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     }
 
     function hideTypingIndicator() {
-        typingIndicator.style.display = 'none';
+        if(typingIndicator) typingIndicator.style.display = 'none';
     }
-
-    // Function to handle quick questions
-    window.askQuestion = function(question) {
-        chatInput.value = question;
-        sendMessage();
-    };
-
-    // Function to handle key press in input
-    window.handleKeyPress = function(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    };
 });
