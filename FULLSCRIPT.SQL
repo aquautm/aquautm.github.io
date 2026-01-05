@@ -89,6 +89,17 @@ CREATE TABLE IF NOT EXISTS events (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create feedback table
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    user_name VARCHAR(100),
+    role VARCHAR(50),
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
 -- Insert admin user (password: admin123)
 -- Note: The password hash below is for 'admin123' using bcrypt with salt rounds 10
 -- IMPORTANT: Replace 'youremail@example.com' with your email.
