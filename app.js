@@ -15,16 +15,11 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.set('trust proxy', 1); 
-
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
-    secure: process.env.NODE_ENV === "production",
-    sameSite: 'lax' 
-  }
+  cookie: { secure: false } // Set to true if using HTTPS
 }));
 app.use(express.static(path.join(__dirname, "")));
 
