@@ -1,18 +1,22 @@
 const mysql = require("mysql2");
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "aquautm",
-  
+  uri: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  },
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-
-console.log("✅ Database connected");
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error("❌ Database connection failed:", err.message);
+  } else {
+    console.log("✅ Database connected to Aiven");
+    connection.release();
+  }
+});
 
 module.exports = pool;
