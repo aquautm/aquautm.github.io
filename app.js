@@ -310,7 +310,7 @@ app.post('/api/admin/create-athlete', isAuthenticated, async (req, res) => {
     }
 
     // Hash password
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new athlete
