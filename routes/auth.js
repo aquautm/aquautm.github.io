@@ -11,13 +11,13 @@ router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    return res.send("Passwords do not match.");
+    return res.json({ success: false, message: "Passwords do not match." });
   }
 
   try {
     const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
     if (rows.length > 0) {
-      return res.send("User already exists. Please use a different email.");
+      return res.json({ success: false, message: "User already exists. Please use a different email." });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -26,11 +26,10 @@ router.post("/signup", async (req, res) => {
       [firstName, lastName, email, hashedPassword]
     );
 
-    console.log("✅ New user registered:", email);
-    res.redirect("/login");
+    res.json({ success: true, message: "Signup successful! Redirecting to login..." });
   } catch (err) {
     console.error("Error during signup:", err);
-    res.status(500).send("Error registering user.");
+    res.status(500).json({ success: false, message: "Error registering user." });
   }
 });
 
