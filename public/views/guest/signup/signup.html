@@ -47,7 +47,7 @@
 
                 <label>Confirm Password <span class="required">*</span></label>
                 <div class="password-container">
-                    <input type="password" name="confirm_Password" id="confirm_Password" required>
+                    <input type="password" name="confirmPassword" id="confirmPassword" required>
                     <span class="eye-icon" onclick="togglePassword('confirmPassword')">👁️</span>
                 </div>
 
@@ -99,7 +99,7 @@
             e.preventDefault();
 
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_Password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             
             if (password !== confirmPassword) {
                 alert('Passwords do not match!');

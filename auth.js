@@ -8,7 +8,7 @@ const { sendMail } = require("../utils/mailer");
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
+  const { first_name, last_name, email, password, confirm_Password } = req.body;
 
   if (password !== confirmPassword) {
     return res.send("Passwords do not match.");
@@ -23,7 +23,7 @@ router.post("/signup", async (req, res) => {
 
     await db.promise().query(
       "INSERT INTO users (first_name, last_name, email, password, twofa_enabled) VALUES (?, ?, ?, ?, true)",
-      [firstName, lastName, email, hashedPassword]
+      [first_name, last_name, email, hashedPassword]
     );
 
     console.log("✅ New user registered:", email);
